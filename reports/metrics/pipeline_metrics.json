@@ -1,0 +1,105 @@
+{
+  "data_freshness": "2013-01-01",
+  "datasets": [
+    "recent_grads",
+    "bechdel_movies"
+  ],
+  "dq_pass": true,
+  "last_updated_at": "2026-02-22T22:52:17+00:00",
+  "pipeline_started_at": "2026-02-22T22:51:21+00:00",
+  "rows_bronze": 1967,
+  "rows_gold": 191,
+  "rows_ingested": 1967,
+  "rows_silver": 1967,
+  "run_date": "2026-02-22",
+  "source": "fivethirtyeight",
+  "stages": {
+    "bronze": {
+      "batch_id": "20260222_fivethirtyeight",
+      "datasets_processed": [
+        "recent_grads",
+        "bechdel_movies"
+      ],
+      "rows_bronze": 1967,
+      "rows_ingested": 1967,
+      "runtime_seconds": 0.08
+    },
+    "dbt_gold": {
+      "rows_gold": 191,
+      "runtime_seconds": 12.17,
+      "tables": [
+        "dim_major_category",
+        "fact_major_employment",
+        "kpi_major_outcomes",
+        "kpi_movie_representation"
+      ]
+    },
+    "dq": {
+      "checkpoint_name": "silver_bechdel_checkpoint",
+      "evaluated_expectations": 7,
+      "success": true,
+      "unsuccessful_expectations": 0
+    },
+    "dq_notebook": {
+      "checkpoint_name": "silver_bechdel_checkpoint",
+      "evaluated_expectations": 7,
+      "success": true,
+      "unsuccessful_expectations": 0
+    },
+    "notebook::00_project_overview.ipynb": {
+      "runtime_seconds": 1.75,
+      "status": "completed"
+    },
+    "notebook::01_data_sources.ipynb": {
+      "runtime_seconds": 1.71,
+      "status": "completed"
+    },
+    "notebook::02_bronze_ingestion.ipynb": {
+      "runtime_seconds": 2.16,
+      "status": "completed"
+    },
+    "notebook::03_silver_cleaning.ipynb": {
+      "runtime_seconds": 1.9,
+      "status": "completed"
+    },
+    "notebook::04_dbt_marts_gold.ipynb": {
+      "runtime_seconds": 13.97,
+      "status": "completed"
+    },
+    "notebook::05_data_quality.ipynb": {
+      "runtime_seconds": 9.05,
+      "status": "completed"
+    },
+    "notebook::06_observability.ipynb": {
+      "runtime_seconds": 2.45,
+      "status": "completed"
+    },
+    "notebook::07_portfolio_story.ipynb": {
+      "runtime_seconds": 4.04,
+      "status": "completed"
+    },
+    "observability": {
+      "data_freshness": "2013-01-01",
+      "dq_failure_rate": 0.0,
+      "dq_pass": true,
+      "rows_bronze": 1967,
+      "rows_gold": 191,
+      "rows_ingested": 1967,
+      "rows_silver": 1967,
+      "runtime_chart": "/home/willian/PhaifferTech/enterprise-industrial-data-platform/reports/observability_runtime_seconds.png"
+    },
+    "silver": {
+      "datasets_processed": [
+        "recent_grads",
+        "bechdel_movies"
+      ],
+      "rows_silver": 1967,
+      "runtime_seconds": 0.07
+    },
+    "sources": {
+      "dataset_count": 2,
+      "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+      "source": "fivethirtyeight"
+    }
+  }
+}

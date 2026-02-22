@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_recent_grads
+    description: "Typed and contract-aligned recent graduates Silver dataset."
+    columns:
+      - name: major_code
+        tests:
+          - not_null
+          - unique
+      - name: major
+        tests:
+          - not_null
+      - name: major_category
+        tests:
+          - not_null
+
+  - name: stg_bechdel_movies
+    description: "Typed and contract-aligned Bechdel movie Silver dataset."
+    columns:
+      - name: imdb
+        tests:
+          - not_null
+          - unique
+      - name: bechdel_result
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['PASS', 'FAIL']
+      - name: release_year
+        tests:
+          - not_null
+
+  - name: dim_major_category
+    columns:
+      - name: major_category
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_major_employment
+    columns:
+      - name: major_code
+        tests:
+          - not_null
+          - unique
+      - name: major_category
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_major_category')
+                field: major_category

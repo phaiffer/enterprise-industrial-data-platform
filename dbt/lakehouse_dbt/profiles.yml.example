@@ -1,0 +1,8 @@
+lakehouse_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: warehouse/lakehouse.duckdb
+      threads: 4
+      schema: analytics

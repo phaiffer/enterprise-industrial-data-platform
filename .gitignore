@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.env
+
+# Runtime data (downloaded/generated at execution time)
+data/raw/*
+!data/raw/.gitkeep
+lakehouse/bronze/*
+!lakehouse/bronze/.gitkeep
+lakehouse/silver/*
+!lakehouse/silver/.gitkeep
+lakehouse/gold/*
+!lakehouse/gold/.gitkeep
+reports/*
+!reports/.gitkeep
+!reports/metrics/
+!reports/metrics/.gitkeep
+warehouse/*
+!warehouse/.gitkeep
+
+# dbt build outputs
+dbt/lakehouse_dbt/target/
+dbt/lakehouse_dbt/dbt_packages/
+dbt/lakehouse_dbt/logs/
+dbt/lakehouse_dbt/.user.yml
+
+# Great Expectations transient artifacts
+great_expectations/uncommitted/validations/
+great_expectations/**/.ge_store_backend_id

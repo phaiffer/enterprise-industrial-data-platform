@@ -1,0 +1,27 @@
+name: lakehouse_dbt
+version: 1.0.0
+config-version: 2
+
+profile: lakehouse_dbt
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  lakehouse_dbt:
+    +materialized: table
+    staging:
+      +schema: staging
+    marts:
+      +schema: marts
+
+vars:
+  silver_recent_grads_path: "{{ env_var('SILVER_RECENT_GRADS_PATH', '../../lakehouse/silver/recent_grads/data.parquet') }}"
+  silver_bechdel_movies_path: "{{ env_var('SILVER_BECHDEL_MOVIES_PATH', '../../lakehouse/silver/bechdel_movies/data.parquet') }}"
