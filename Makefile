@@ -3,8 +3,9 @@ VENV ?= .venv
 BIN := $(VENV)/bin
 DBT_PROJECT_DIR := dbt/lakehouse_dbt
 DBT_PROFILES_DIR := dbt/lakehouse_dbt
+ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 
-.PHONY: setup notebooks run-all dbt-run dbt-test dq clean
+.PHONY: setup notebooks run-all dbt-run dbt-test dq clean infra-up infra-down infra-logs infra-status infra-smoke
 
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
@@ -33,3 +34,18 @@ dq:
 
 clean:
 	$(BIN)/python scripts/clean_artifacts.py
+
+infra-up:
+	docker compose -f $(ENTERPRISE_COMPOSE_FILE) up -d
+
+infra-down:
+	docker compose -f $(ENTERPRISE_COMPOSE_FILE) down -v
+
+infra-logs:
+	docker compose -f $(ENTERPRISE_COMPOSE_FILE) logs -f --tail=200
+
+infra-status:
+	docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
+
+infra-smoke:
+	docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
