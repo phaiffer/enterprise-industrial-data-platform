@@ -18,6 +18,9 @@ reports/*
 !reports/.gitkeep
 !reports/metrics/
 !reports/metrics/.gitkeep
+!reports/infra_smoke/
+reports/infra_smoke/*
+!reports/infra_smoke/.gitkeep
 warehouse/*
 !warehouse/.gitkeep
 
@@ -30,3 +33,6 @@ dbt/lakehouse_dbt/.user.yml
 # Great Expectations transient artifacts
 great_expectations/uncommitted/validations/
 great_expectations/**/.ge_store_backend_id
+
+# Mode 2 enterprise local logs
+orchestration/airflow/logs/
