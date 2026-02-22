@@ -138,6 +138,7 @@ services:
       - ../../orchestration/airflow/plugins:/opt/airflow/plugins
       - ../../src:/opt/eidp/src
       - ../../conf/spark:/opt/eidp/conf/spark
+      - ../../reports:/opt/eidp/reports
     command: webserver
 
   airflow-scheduler:
@@ -150,6 +151,7 @@ services:
       - ../../orchestration/airflow/plugins:/opt/airflow/plugins
       - ../../src:/opt/eidp/src
       - ../../conf/spark:/opt/eidp/conf/spark
+      - ../../reports:/opt/eidp/reports
     command: scheduler
 
   airflow-db:

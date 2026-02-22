@@ -48,4 +48,4 @@ infra-status:
 	docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
 
 infra-smoke:
-	docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
+	python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
