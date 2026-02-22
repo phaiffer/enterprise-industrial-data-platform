@@ -1,6 +1,4 @@
-version: "3.9"
-
-name: eidp
+name: eidp-enterprise
 
 services:
   # -------------------------
@@ -93,9 +91,9 @@ services:
       - "7077:7077"
       - "8080:8080"  # Spark Master UI
     volumes:
-      - ./src:/opt/eidp/src
-      - ./data:/opt/eidp/data
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ../../src:/opt/eidp/src
+      - ../../data:/opt/eidp/data
+      - ../../conf/spark:/opt/bitnami/spark/conf
 
   spark-worker:
     image: bitnami/spark:3.5.1
@@ -106,9 +104,9 @@ services:
     ports:
       - "8081:8081"  # Spark Worker UI
     volumes:
-      - ./src:/opt/eidp/src
-      - ./data:/opt/eidp/data
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ../../src:/opt/eidp/src
+      - ../../data:/opt/eidp/data
+      - ../../conf/spark:/opt/bitnami/spark/conf
 
   # Convenience container to run Spark jobs from inside the cluster network.
   spark-submit:
@@ -117,8 +115,8 @@ services:
     entrypoint: ["/bin/bash", "-lc"]
     command: ["sleep infinity"]
     volumes:
-      - ./src:/opt/eidp/src
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ../../src:/opt/eidp/src
+      - ../../conf/spark:/opt/bitnami/spark/conf
 
   # -------------------------
   # Airflow (Orchestration)
@@ -135,11 +133,11 @@ services:
     ports:
       - "8089:8080"
     volumes:
-      - ./orchestration/airflow/dags:/opt/airflow/dags
-      - ./orchestration/airflow/logs:/opt/airflow/logs
-      - ./orchestration/airflow/plugins:/opt/airflow/plugins
-      - ./src:/opt/eidp/src
-      - ./conf/spark:/opt/eidp/conf/spark
+      - ../../orchestration/airflow/dags:/opt/airflow/dags
+      - ../../orchestration/airflow/logs:/opt/airflow/logs
+      - ../../orchestration/airflow/plugins:/opt/airflow/plugins
+      - ../../src:/opt/eidp/src
+      - ../../conf/spark:/opt/eidp/conf/spark
     command: webserver
 
   airflow-scheduler:
@@ -147,11 +145,11 @@ services:
     depends_on: [airflow-db, airflow-init]
     environment: *airflow_env
     volumes:
-      - ./orchestration/airflow/dags:/opt/airflow/dags
-      - ./orchestration/airflow/logs:/opt/airflow/logs
-      - ./orchestration/airflow/plugins:/opt/airflow/plugins
-      - ./src:/opt/eidp/src
-      - ./conf/spark:/opt/eidp/conf/spark
+      - ../../orchestration/airflow/dags:/opt/airflow/dags
+      - ../../orchestration/airflow/logs:/opt/airflow/logs
+      - ../../orchestration/airflow/plugins:/opt/airflow/plugins
+      - ../../src:/opt/eidp/src
+      - ../../conf/spark:/opt/eidp/conf/spark
     command: scheduler
 
   airflow-db:
@@ -199,7 +197,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
   grafana:
     image: grafana/grafana:11.1.4
