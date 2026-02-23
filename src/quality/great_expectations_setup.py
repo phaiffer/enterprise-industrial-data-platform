@@ -12,7 +12,7 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from src.common.paths import GE_DIR
+from src.common.paths import GE_DIR, purge_legacy_ge_dir
 
 
 def utc_now_iso() -> str:
@@ -29,6 +29,8 @@ def validate_batch_csv(csv_path: str) -> dict:
     """
     df = pd.read_csv(csv_path)
 
+    purge_legacy_ge_dir()
+    os.environ["GX_HOME"] = str(GE_DIR)
     context = gx.get_context(context_root_dir=str(GE_DIR))
     validator = context.sources.pandas_default.read_dataframe(df)
 
@@ -43,6 +45,7 @@ def validate_batch_csv(csv_path: str) -> dict:
     validator.expect_column_values_to_be_between("pressure", min_value=0, max_value=50)
 
     result = validator.validate()
+    purge_legacy_ge_dir()
     return result.to_json_dict()
 
 

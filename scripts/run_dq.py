@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -14,15 +15,18 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.common.io import update_pipeline_metrics, update_stage_metrics, write_json
-from src.common.paths import GE_DIR, REPORTS_DIR
+from src.common.paths import GE_DIR, REPORTS_DIR, purge_legacy_ge_dir
 
 CHECKPOINT_NAME = "silver_bechdel_checkpoint"
 
 
 def run_checkpoint(raise_on_failure: bool = True) -> dict:
+    purge_legacy_ge_dir()
+    os.environ["GX_HOME"] = str(GE_DIR)
     context = gx.get_context(context_root_dir=str(GE_DIR))
     result = context.run_checkpoint(checkpoint_name=CHECKPOINT_NAME)
     context.build_data_docs()
+    purge_legacy_ge_dir()
 
     result_dict = result.to_json_dict()
     write_json(REPORTS_DIR / "dq_result_full.json", result_dict)

@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -22,8 +23,16 @@ GE_DIR = ROOT_DIR / "great_expectations"
 PIPELINE_METRICS_PATH = METRICS_DIR / "pipeline_metrics.json"
 
 
+def purge_legacy_ge_dir() -> None:
+    """Remove legacy root-level gx directory if it exists."""
+    legacy_gx_dir = ROOT_DIR / "gx"
+    if legacy_gx_dir.exists() and legacy_gx_dir.is_dir():
+        shutil.rmtree(legacy_gx_dir)
+
+
 def ensure_project_dirs() -> None:
     """Create all runtime directories used by the pipeline."""
+    purge_legacy_ge_dir()
     for path in (
         RAW_DATA_DIR,
         BRONZE_DIR,
