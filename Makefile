@@ -7,7 +7,29 @@ ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 MYSQL_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.mysql.yml
 AIRFLOW_UID ?= 50000
 
-.PHONY: help setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke mysql-up mysql-down mysql-logs mysql-status mysql-publish mysql-preview
+.DEFAULT_GOAL := help
+
+.PHONY: \
+	help \
+	setup \
+	notebooks \
+	run-all \
+	dbt-run \
+	dbt-test \
+	dbt-preview \
+	dq \
+	clean \
+	infra-up \
+	infra-down \
+	infra-logs \
+	infra-status \
+	infra-smoke \
+	mysql-up \
+	mysql-down \
+	mysql-logs \
+	mysql-status \
+	mysql-publish \
+	mysql-preview
 
 help:
 	@echo "Mode 1 (default local lakehouse):"
@@ -25,6 +47,7 @@ help:
 	@echo "  make infra-smoke"
 	@echo "  make infra-down"
 
+# Environment bootstrap
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
 
@@ -37,6 +60,7 @@ setup: $(BIN)/python
 notebooks:
 	$(BIN)/jupyter lab notebooks/
 
+# Mode 1 pipeline
 run-all:
 	$(BIN)/python scripts/run_notebooks.py --source fivethirtyeight --datasets recent_grads bechdel_movies
 
@@ -56,6 +80,7 @@ dq:
 clean:
 	$(BIN)/python scripts/clean_artifacts.py
 
+# Mode 2 enterprise infra
 infra-up:
 	mkdir -p reports/infra_smoke
 	chmod 777 reports/infra_smoke
@@ -73,6 +98,7 @@ infra-status:
 infra-smoke:
 	AIRFLOW_UID=$(AIRFLOW_UID) python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
 
+# Optional MySQL serving layer
 mysql-up:
 	docker compose -f $(MYSQL_COMPOSE_FILE) up -d
 
