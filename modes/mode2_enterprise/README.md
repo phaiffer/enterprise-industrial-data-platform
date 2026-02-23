@@ -44,3 +44,13 @@ Manual path:
 ## Notes
 - Mode 2 is not used by CI.
 - Keep Mode 1 as the primary development path.
+
+## Optional MySQL Serving Layer
+MySQL can be started independently to host published Gold marts/KPIs:
+
+```bash
+make mysql-up
+make mysql-publish
+make mysql-preview
+make mysql-down
+```

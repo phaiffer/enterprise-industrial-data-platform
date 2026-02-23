@@ -1,0 +1,16 @@
+# Optional dbt profile example for MySQL targets.
+# This is NOT the default profile for the repository.
+# If you use it, install an appropriate dbt MySQL adapter (community-supported).
+
+lakehouse_dbt:
+  target: mysql
+  outputs:
+    mysql:
+      type: mysql
+      server: localhost
+      port: 3306
+      database: eidp_serving
+      schema: eidp_serving
+      username: root
+      password: yourpassword
+      threads: 4

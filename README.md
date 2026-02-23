@@ -43,6 +43,28 @@ make infra-logs
 make infra-down
 ```
 
+## Optional: Publish Gold To MySQL
+MySQL is an optional serving layer for BI/API-style consumption of curated Gold outputs.
+
+What this does:
+- keeps Lakehouse storage in Parquet + DuckDB (no change to default mode),
+- publishes selected `marts.*` tables to MySQL,
+- adds serving metadata columns: `_published_at`, `_source_run_id`.
+
+MySQL flow:
+```bash
+make mysql-up
+make mysql-publish
+make mysql-preview
+```
+
+Stop MySQL:
+```bash
+make mysql-down
+```
+
+Compose file: `modes/mode2_enterprise/docker-compose.mysql.yml`
+
 ## Architecture
 
 ### Mode 1 Diagram (Default)
@@ -128,6 +150,7 @@ License: CC BY 4.0.
 - ADRs:
   - `docs/adr/0001_duckdb_dbt_choice.md`
   - `docs/adr/0002_two_mode_repo.md`
+  - `docs/adr/0003_mysql_serving_layer.md`
 
 ## Demo Assets
 - Folder: `docs/assets/`
