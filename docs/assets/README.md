@@ -1,11 +1,17 @@
-# Demo Assets
+# Visual Demo Assets
 
-Store screenshots used by the root README.
+Use this folder for screenshots referenced by the root `README.md`.
 
-Placeholder files to add:
-- `mode1_notebook_execution.png`
-- `mode1_dbt_docs.png`
-- `mode2_airflow_smoke_dag.png`
-- `mode2_grafana_overview.png`
+Recommended screenshots to capture after running the demo:
+- `mode1_dbt_docs_lineage.png`: dbt docs lineage graph from `dbt docs serve`.
+- `mode1_ge_data_docs.png`: Great Expectations Data Docs landing page.
+- `mode1_kpi_table_preview.png`: terminal output from `make dbt-preview`.
+- `mode2_observability_chart.png`: Grafana dashboard or Prometheus chart.
 
-A tracked `.gitkeep` is included so the folder stays in git.
+Tracked SVG placeholders (safe markdown links):
+- `mode1_dbt_docs_lineage.svg`
+- `mode1_ge_data_docs.svg`
+- `mode1_kpi_table_preview.svg`
+- `mode2_observability_chart.svg`
+
+Keep `.gitkeep` so this directory remains tracked even before adding screenshots.
