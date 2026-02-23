@@ -4,8 +4,9 @@ BIN := $(VENV)/bin
 DBT_PROJECT_DIR := dbt/lakehouse_dbt
 DBT_PROFILES_DIR := dbt/lakehouse_dbt
 ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
+MYSQL_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.mysql.yml
 
-.PHONY: setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke
+.PHONY: setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke mysql-up mysql-down mysql-logs mysql-status mysql-publish mysql-preview
 
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
@@ -52,3 +53,21 @@ infra-status:
 
 infra-smoke:
 	python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
+
+mysql-up:
+	docker compose -f $(MYSQL_COMPOSE_FILE) up -d
+
+mysql-down:
+	docker compose -f $(MYSQL_COMPOSE_FILE) down -v
+
+mysql-logs:
+	docker compose -f $(MYSQL_COMPOSE_FILE) logs -f --tail=200
+
+mysql-status:
+	docker compose -f $(MYSQL_COMPOSE_FILE) ps
+
+mysql-publish:
+	$(BIN)/python scripts/publish_gold_to_mysql.py
+
+mysql-preview:
+	$(BIN)/python scripts/mysql_preview.py
