@@ -35,4 +35,7 @@ great_expectations/uncommitted/validations/
 great_expectations/**/.ge_store_backend_id
 
 # Mode 2 enterprise local logs
-orchestration/airflow/logs/
+modes/mode2_enterprise/orchestration/airflow/logs/
+
+# Mode 2 MySQL local volume data
+modes/mode2_enterprise/warehouse/mysql/
