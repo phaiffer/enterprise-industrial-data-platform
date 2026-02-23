@@ -26,7 +26,7 @@ What this proves:
 
 Expected runtime outputs:
 - `lakehouse/bronze/*`, `lakehouse/silver/*`, `lakehouse/gold/*`
-- `warehouse/lakehouse.duckdb`
+- `lakehouse/warehouse/lakehouse.duckdb`
 - `reports/great_expectations/`
 - `reports/metrics/pipeline_metrics.json`
 
@@ -112,7 +112,7 @@ Prometheus (9090) <- cAdvisor (8082) -> Grafana (3000)
 
 Root contains Mode 1 core and docs:
 - `notebooks/`, `src/`, `scripts/`, `dbt/`, `great_expectations/`
-- `data/`, `lakehouse/`, `warehouse/`, `reports/`
+- `data/`, `lakehouse/`, `reports/`
 - `docs/`, `tests/`, `Makefile`, `.github/workflows/ci.yml`
 
 Enterprise-only assets are isolated under:
@@ -136,5 +136,5 @@ make mysql-down
 ## CI and Data Policy
 - CI runs Mode 1 only (`make setup`, `make run-all`, `make dbt-test`, `make dq`).
 - Docker Compose is intentionally excluded from CI.
-- Runtime outputs in `lakehouse/`, `warehouse/`, and `reports/` are not committed.
+- Runtime outputs in `lakehouse/` and `reports/` are not committed.
 - Raw datasets are downloaded at runtime and kept out of version control.
