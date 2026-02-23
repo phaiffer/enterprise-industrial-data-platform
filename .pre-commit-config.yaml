@@ -12,7 +12,8 @@ repos:
     rev: v0.9.10
     hooks:
       - id: ruff
-        args: [--fix]
+        args:
+          - --fix
         exclude: ^notebooks/
       - id: ruff-format
         exclude: ^notebooks/

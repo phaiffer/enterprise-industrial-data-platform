@@ -2,7 +2,8 @@ name: ci
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
   pull_request:
 
 jobs:
@@ -16,8 +17,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
           cache-dependency-path: requirements.txt
 
       - name: Install dependencies

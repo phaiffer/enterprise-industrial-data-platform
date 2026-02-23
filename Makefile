@@ -50,8 +50,17 @@ help:
 	@echo "  make infra-logs"
 	@echo "  make infra-smoke"
 	@echo "  make infra-down"
+	@echo ""
+	@echo "MySQL serving (optional):"
+	@echo "  make mysql-up"
+	@echo "  make mysql-status"
+	@echo "  make mysql-publish"
+	@echo "  make mysql-preview"
+	@echo "  make mysql-down"
 
+# -----------------------------------------------------------------------------
 # Environment bootstrap
+# -----------------------------------------------------------------------------
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
 
@@ -64,7 +73,9 @@ setup: $(BIN)/python
 notebooks:
 	$(BIN)/jupyter lab notebooks/
 
-# Mode 1 pipeline
+# -----------------------------------------------------------------------------
+# Mode 1 (default): notebook-first local lakehouse
+# -----------------------------------------------------------------------------
 run-all:
 	$(BIN)/python scripts/run_notebooks.py --source fivethirtyeight --datasets recent_grads bechdel_movies
 
@@ -92,7 +103,9 @@ fmt:
 lint:
 	$(BIN)/ruff check src scripts modes/mode2_enterprise/orchestration/airflow/dags
 
-# Mode 2 enterprise infra
+# -----------------------------------------------------------------------------
+# Mode 2 (optional): enterprise infra
+# -----------------------------------------------------------------------------
 infra-up:
 	mkdir -p reports/infra_smoke
 	chmod 777 reports/infra_smoke
@@ -110,7 +123,9 @@ infra-status:
 infra-smoke:
 	AIRFLOW_UID=$(AIRFLOW_UID) python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
 
+# -----------------------------------------------------------------------------
 # Optional MySQL serving layer
+# -----------------------------------------------------------------------------
 mysql-up:
 	docker compose -f $(MYSQL_COMPOSE_FILE) up -d
 
