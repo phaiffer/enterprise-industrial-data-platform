@@ -15,7 +15,7 @@ make infra-down
 - Fix: start Docker service and retry.
 
 ### Port collisions
-- Symptom: bind errors on `3000`, `8080`, `8089`, `9090`, etc.
+- Symptom: bind errors on `3000`, `8088`, `8089`, `9090`, `18080`, etc.
 - Fix: stop conflicting processes or adjust port mappings in compose.
 
 ### Airflow UI opens but DAGs not visible

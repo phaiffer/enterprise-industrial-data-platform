@@ -44,7 +44,7 @@ services:
   # MinIO (S3-compatible)
   # -------------------------
   minio:
-    image: minio/minio:RELEASE.2024-12-18T06-28-36Z
+    image: minio/minio:RELEASE.2025-01-20T14-49-07Z
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -56,7 +56,7 @@ services:
       - minio_data:/data
 
   minio-init:
-    image: minio/mc:RELEASE.2024-12-14T00-00-00Z
+    image: minio/mc:RELEASE.2025-01-17T23-25-50Z
     depends_on: [minio]
     entrypoint: >
       /bin/sh -c "
@@ -84,46 +84,51 @@ services:
   # Spark (with Delta Lake via packages at runtime)
   # -------------------------
   spark-master:
-    image: bitnami/spark:3.5.1
+    image: bitnamilegacy/spark:3.5.1
     environment:
       - SPARK_MODE=master
     ports:
       - "7077:7077"
-      - "8080:8080"  # Spark Master UI
+      - "18080:8080"  # Spark Master UI
     volumes:
       - ../../src:/opt/eidp/src
       - ../../data:/opt/eidp/data
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ./conf/spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf:ro
 
   spark-worker:
-    image: bitnami/spark:3.5.1
+    image: bitnamilegacy/spark:3.5.1
     depends_on: [spark-master]
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
     ports:
-      - "8081:8081"  # Spark Worker UI
+      - "18081:8081"  # Spark Worker UI
     volumes:
       - ../../src:/opt/eidp/src
       - ../../data:/opt/eidp/data
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ./conf/spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf:ro
 
   # Convenience container to run Spark jobs from inside the cluster network.
   spark-submit:
-    image: bitnami/spark:3.5.1
+    image: bitnamilegacy/spark:3.5.1
     depends_on: [spark-master, spark-worker, minio, minio-init]
     entrypoint: ["/bin/bash", "-lc"]
     command: ["sleep infinity"]
     volumes:
       - ../../src:/opt/eidp/src
-      - ./conf/spark:/opt/bitnami/spark/conf
+      - ./conf/spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf:ro
 
   # -------------------------
   # Airflow (Orchestration)
   # -------------------------
   airflow-webserver:
     image: apache/airflow:2.9.3
-    depends_on: [airflow-scheduler, airflow-init]
+    user: "${AIRFLOW_UID:-50000}:0"
+    depends_on:
+      airflow-scheduler:
+        condition: service_started
+      airflow-init:
+        condition: service_completed_successfully
     environment: &airflow_env
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
@@ -134,27 +139,34 @@ services:
       - "8089:8080"
     volumes:
       - ./orchestration/airflow/dags:/opt/airflow/dags
-      - ./orchestration/airflow/logs:/opt/airflow/logs
-      - ./orchestration/airflow/plugins:/opt/airflow/plugins
+      - airflow_logs:/opt/airflow/logs
+      - ./orchestration/airflow/plugins:/opt/airflow/plugins:ro
       - ../../src:/opt/eidp/src
       - ./conf/spark:/opt/eidp/conf/spark
       # Host artifact output for infra smoke checks.
       - ../../reports:/opt/airflow/reports
     command: webserver
+    restart: unless-stopped
 
   airflow-scheduler:
     image: apache/airflow:2.9.3
-    depends_on: [airflow-db, airflow-init]
+    user: "${AIRFLOW_UID:-50000}:0"
+    depends_on:
+      airflow-db:
+        condition: service_started
+      airflow-init:
+        condition: service_completed_successfully
     environment: *airflow_env
     volumes:
       - ./orchestration/airflow/dags:/opt/airflow/dags
-      - ./orchestration/airflow/logs:/opt/airflow/logs
-      - ./orchestration/airflow/plugins:/opt/airflow/plugins
+      - airflow_logs:/opt/airflow/logs
+      - ./orchestration/airflow/plugins:/opt/airflow/plugins:ro
       - ../../src:/opt/eidp/src
       - ./conf/spark:/opt/eidp/conf/spark
       # Host artifact output for infra smoke checks.
       - ../../reports:/opt/airflow/reports
     command: scheduler
+    restart: unless-stopped
 
   airflow-db:
     image: postgres:16
@@ -167,18 +179,14 @@ services:
 
   airflow-init:
     image: apache/airflow:2.9.3
+    user: "${AIRFLOW_UID:-50000}:0"
     depends_on: [airflow-db]
     environment: *airflow_env
     entrypoint: ["/bin/bash", "-lc"]
-    command: >
-      airflow db migrate &&
-      airflow users create
-      --username admin
-      --password admin
-      --firstname Admin
-      --lastname User
-      --role Admin
-      --email admin@example.com
+    command:
+      - >
+        airflow db migrate &&
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com
     restart: "no"
 
   # -------------------------
@@ -218,4 +226,5 @@ volumes:
   minio_data:
   pg_data:
   airflow_pg:
+  airflow_logs:
   grafana_data:

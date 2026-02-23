@@ -5,6 +5,7 @@ DBT_PROJECT_DIR := dbt/lakehouse_dbt
 DBT_PROFILES_DIR := dbt/lakehouse_dbt
 ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 MYSQL_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.mysql.yml
+AIRFLOW_UID ?= 50000
 
 .PHONY: help setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke mysql-up mysql-down mysql-logs mysql-status mysql-publish mysql-preview
 
@@ -56,19 +57,21 @@ clean:
 	$(BIN)/python scripts/clean_artifacts.py
 
 infra-up:
-	docker compose -f $(ENTERPRISE_COMPOSE_FILE) up -d
+	mkdir -p reports/infra_smoke
+	chmod 777 reports/infra_smoke
+	AIRFLOW_UID=$(AIRFLOW_UID) docker compose -f $(ENTERPRISE_COMPOSE_FILE) up -d
 
 infra-down:
-	docker compose -f $(ENTERPRISE_COMPOSE_FILE) down -v
+	AIRFLOW_UID=$(AIRFLOW_UID) docker compose -f $(ENTERPRISE_COMPOSE_FILE) down -v
 
 infra-logs:
-	docker compose -f $(ENTERPRISE_COMPOSE_FILE) logs -f --tail=200
+	AIRFLOW_UID=$(AIRFLOW_UID) docker compose -f $(ENTERPRISE_COMPOSE_FILE) logs -f --tail=200
 
 infra-status:
-	docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
+	AIRFLOW_UID=$(AIRFLOW_UID) docker compose -f $(ENTERPRISE_COMPOSE_FILE) ps
 
 infra-smoke:
-	python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
+	AIRFLOW_UID=$(AIRFLOW_UID) python3 scripts/infra_smoke.py --compose-file $(ENTERPRISE_COMPOSE_FILE)
 
 mysql-up:
 	docker compose -f $(MYSQL_COMPOSE_FILE) up -d

@@ -33,6 +33,7 @@ dbt/lakehouse_dbt/.user.yml
 # Great Expectations transient artifacts
 great_expectations/uncommitted/validations/
 great_expectations/**/.ge_store_backend_id
+gx/
 
 # Mode 2 enterprise local logs
 modes/mode2_enterprise/orchestration/airflow/logs/

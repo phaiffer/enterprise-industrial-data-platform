@@ -1,56 +1,39 @@
-# Mode 2: Enterprise Stack (Optional)
+# Mode 2: Enterprise Infra (Optional)
 
-This mode is optional and independent from the default local workflow.
+Mode 2 demonstrates infrastructure breadth and is intentionally optional.
 
-## Purpose
-Show enterprise platform breadth: orchestration, streaming, object storage, and observability.
-
-## Prerequisites
-- Docker + Docker Compose v2
-- Minimum ~8 GB RAM recommended for all services
-
-## Compose File
-`modes/mode2_enterprise/docker-compose.enterprise.yml`
+## Important
+- Mode 2 is not required for Mode 1 validation.
+- CI remains Mode 1 only.
 
 ## Start / Stop
 ```bash
 make infra-up
 make infra-status
 make infra-logs
+make infra-smoke
 make infra-down
 ```
 
-## Service Endpoints
+## What Lives Here
+- `docker-compose.enterprise.yml`: enterprise stack (Airflow, Spark, Kafka, MinIO, Prometheus, Grafana, Postgres)
+- `orchestration/airflow/`: DAGs/plugins/logs mounts
+- `observability/prometheus/`: Prometheus config
+- `conf/spark/`: Spark runtime config for compose services
+- `warehouse/`: local infra volumes (for optional services such as MySQL)
+
+## Service URLs
 - Airflow: `http://localhost:8089` (`admin` / `admin`)
 - Grafana: `http://localhost:3000` (`admin` / `admin`)
 - Prometheus: `http://localhost:9090`
 - Kafka UI: `http://localhost:8088`
 - MinIO Console: `http://localhost:9001` (`minioadmin` / `minioadmin`)
-- Spark Master UI: `http://localhost:8080`
+- Spark Master UI: `http://localhost:18080`
+- Spark Worker UI: `http://localhost:18081`
 
-## Infra Smoke Demo
-Use the dedicated Airflow DAG:
-```bash
-make infra-smoke
-```
-This triggers `infra_smoke_dag` and verifies artifact creation at:
-- `reports/infra_smoke/ok.txt`
-
-Manual path:
-1. Open Airflow UI.
-2. Trigger DAG `infra_smoke_dag`.
-3. Confirm `reports/infra_smoke/ok.txt` contains run metadata.
-
-## Notes
-- Mode 2 is not used by CI.
-- Keep Mode 1 as the primary development path.
-
-## Optional MySQL Serving Layer
-MySQL can be started independently to host published Gold marts/KPIs:
-
-```bash
-make mysql-up
-make mysql-publish
-make mysql-preview
-make mysql-down
-```
+## Airflow Smoke Demo
+1. `make infra-up`
+2. Open Airflow and trigger `infra_smoke_dag`
+3. Verify `reports/infra_smoke/ok.txt` was written on the host
+4. Optionally run `make infra-smoke` for command-based verification
+5. `make infra-down`

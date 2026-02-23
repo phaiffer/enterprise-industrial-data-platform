@@ -32,6 +32,28 @@ def assert_scheduler_running(compose_file: str) -> None:
         )
 
 
+def unpause_dag(compose_file: str, dag_id: str) -> None:
+    command = [
+        "docker",
+        "compose",
+        "-f",
+        compose_file,
+        "exec",
+        "-T",
+        "airflow-scheduler",
+        "airflow",
+        "dags",
+        "unpause",
+        dag_id,
+    ]
+    result = run_command(command)
+    if result.returncode != 0:
+        raise RuntimeError(
+            "Failed to unpause infra smoke DAG. "
+            f"Error: {result.stderr.strip() or result.stdout.strip()}"
+        )
+
+
 def trigger_dag(compose_file: str, dag_id: str, retries: int = 15, retry_wait: int = 4) -> None:
     command = [
         "docker",
@@ -103,6 +125,7 @@ def main() -> int:
     started_at = time.time()
 
     assert_scheduler_running(args.compose_file)
+    unpause_dag(args.compose_file, args.dag_id)
     trigger_dag(args.compose_file, args.dag_id)
     content = wait_for_artifact(artifact_path, started_at)
 
