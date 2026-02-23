@@ -20,7 +20,7 @@ make infra-down
 
 ### Airflow UI opens but DAGs not visible
 - Check `make infra-logs` for scheduler/webserver errors.
-- Confirm DAG volume mount path exists: `orchestration/airflow/dags`.
+- Confirm DAG volume mount path exists: `modes/mode2_enterprise/orchestration/airflow/dags`.
 
 ### Smoke artifact not created
 - Confirm scheduler is healthy in `make infra-status`.

@@ -6,7 +6,23 @@ DBT_PROFILES_DIR := dbt/lakehouse_dbt
 ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 MYSQL_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.mysql.yml
 
-.PHONY: setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke mysql-up mysql-down mysql-logs mysql-status mysql-publish mysql-preview
+.PHONY: help setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke mysql-up mysql-down mysql-logs mysql-status mysql-publish mysql-preview
+
+help:
+	@echo "Mode 1 (default local lakehouse):"
+	@echo "  make setup"
+	@echo "  make run-all"
+	@echo "  make dbt-run"
+	@echo "  make dbt-test"
+	@echo "  make dq"
+	@echo "  make dbt-preview"
+	@echo ""
+	@echo "Mode 2 (optional enterprise infra):"
+	@echo "  make infra-up"
+	@echo "  make infra-status"
+	@echo "  make infra-logs"
+	@echo "  make infra-smoke"
+	@echo "  make infra-down"
 
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
