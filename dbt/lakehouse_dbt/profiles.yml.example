@@ -3,6 +3,6 @@ lakehouse_dbt:
   outputs:
     dev:
       type: duckdb
-      path: warehouse/lakehouse.duckdb
+      path: lakehouse/warehouse/lakehouse.duckdb
       threads: 4
       schema: analytics

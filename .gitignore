@@ -14,6 +14,8 @@ lakehouse/silver/*
 !lakehouse/silver/.gitkeep
 lakehouse/gold/*
 !lakehouse/gold/.gitkeep
+lakehouse/warehouse/*
+!lakehouse/warehouse/.gitkeep
 reports/*
 !reports/.gitkeep
 !reports/metrics/
@@ -21,9 +23,6 @@ reports/*
 !reports/infra_smoke/
 reports/infra_smoke/*
 !reports/infra_smoke/.gitkeep
-warehouse/*
-!warehouse/.gitkeep
-
 # dbt build outputs
 dbt/lakehouse_dbt/target/
 dbt/lakehouse_dbt/dbt_packages/

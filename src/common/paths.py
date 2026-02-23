@@ -13,7 +13,7 @@ REPORTS_DIR = ROOT_DIR / "reports"
 METRICS_DIR = REPORTS_DIR / "metrics"
 EXECUTED_NOTEBOOKS_DIR = REPORTS_DIR / "executed_notebooks"
 
-WAREHOUSE_DIR = ROOT_DIR / "warehouse"
+WAREHOUSE_DIR = LAKEHOUSE_DIR / "warehouse"
 WAREHOUSE_DB_PATH = WAREHOUSE_DIR / "lakehouse.duckdb"
 
 DBT_PROJECT_DIR = ROOT_DIR / "dbt" / "lakehouse_dbt"
