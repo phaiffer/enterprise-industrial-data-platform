@@ -138,6 +138,7 @@ services:
       - ./orchestration/airflow/plugins:/opt/airflow/plugins
       - ../../src:/opt/eidp/src
       - ./conf/spark:/opt/eidp/conf/spark
+      # Host artifact output for infra smoke checks.
       - ../../reports:/opt/airflow/reports
     command: webserver
 
@@ -151,6 +152,7 @@ services:
       - ./orchestration/airflow/plugins:/opt/airflow/plugins
       - ../../src:/opt/eidp/src
       - ./conf/spark:/opt/eidp/conf/spark
+      # Host artifact output for infra smoke checks.
       - ../../reports:/opt/airflow/reports
     command: scheduler
 

@@ -4,23 +4,31 @@ from pathlib import Path
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
+ARTIFACT_PATH = Path("/opt/airflow/reports/infra_smoke/ok.txt")
+
 
 def write_infra_smoke_artifact(**context) -> None:
-    output_dir = Path("/opt/eidp/reports/infra_smoke")
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ARTIFACT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     run_id = context["run_id"]
     executed_at = datetime.now(timezone.utc).isoformat()
 
-    output_path = output_dir / "ok.txt"
-    output_path.write_text(
+    ARTIFACT_PATH.write_text(
         (
             "infra_smoke_dag=success\n"
             f"run_id={run_id}\n"
-            f"executed_at={executed_at}\n"
+            f"timestamp_utc={executed_at}\n"
+            "message=Mode 2 enterprise stack is alive.\n"
         ),
         encoding="utf-8",
     )
+
+
+def print_infra_smoke_artifact() -> None:
+    if not ARTIFACT_PATH.exists():
+        raise FileNotFoundError(f"Smoke artifact not found: {ARTIFACT_PATH}")
+    print(f"Artifact path: {ARTIFACT_PATH}")
+    print(ARTIFACT_PATH.read_text(encoding='utf-8').strip())
 
 
 with DAG(
@@ -35,4 +43,9 @@ with DAG(
         python_callable=write_infra_smoke_artifact,
     )
 
-    write_artifact
+    print_artifact = PythonOperator(
+        task_id="print_infra_smoke_artifact",
+        python_callable=print_infra_smoke_artifact,
+    )
+
+    write_artifact >> print_artifact
