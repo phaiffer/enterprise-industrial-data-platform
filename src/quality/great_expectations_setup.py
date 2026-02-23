@@ -7,6 +7,12 @@ from pathlib import Path
 import pandas as pd
 import great_expectations as gx
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from src.common.paths import GE_DIR
+
 
 def utc_now_iso() -> str:
     """Return current UTC time in ISO 8601 format."""
@@ -22,7 +28,7 @@ def validate_batch_csv(csv_path: str) -> dict:
     """
     df = pd.read_csv(csv_path)
 
-    context = gx.get_context()
+    context = gx.get_context(context_root_dir=str(GE_DIR))
     validator = context.sources.pandas_default.read_dataframe(df)
 
     # Core schema checks
