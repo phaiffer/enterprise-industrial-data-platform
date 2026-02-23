@@ -55,6 +55,16 @@ def main() -> int:
     if dbt_packages.exists():
         shutil.rmtree(dbt_packages)
 
+    # Remove legacy duplicate GE context if it appears at repository root.
+    legacy_gx_dir = ROOT_DIR / "gx"
+    if legacy_gx_dir.exists():
+        shutil.rmtree(legacy_gx_dir)
+
+    # Remove legacy root MySQL volume if it exists from older compose paths.
+    legacy_mysql_volume = ROOT_DIR / "warehouse" / "mysql"
+    if legacy_mysql_volume.exists():
+        shutil.rmtree(legacy_mysql_volume)
+
     return 0
 
 

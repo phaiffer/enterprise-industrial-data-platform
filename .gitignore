@@ -39,4 +39,5 @@ gx/
 modes/mode2_enterprise/orchestration/airflow/logs/
 
 # Mode 2 MySQL local volume data
-modes/mode2_enterprise/warehouse/mysql/
+modes/mode2_enterprise/warehouse/mysql/*
+!modes/mode2_enterprise/warehouse/mysql/.gitkeep
