@@ -5,7 +5,7 @@ DBT_PROJECT_DIR := dbt/lakehouse_dbt
 DBT_PROFILES_DIR := dbt/lakehouse_dbt
 ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 
-.PHONY: setup notebooks run-all dbt-run dbt-test dq clean infra-up infra-down infra-logs infra-status infra-smoke
+.PHONY: setup notebooks run-all dbt-run dbt-test dbt-preview dq clean infra-up infra-down infra-logs infra-status infra-smoke
 
 $(BIN)/python:
 	$(PYTHON) -m venv $(VENV)
@@ -23,11 +23,14 @@ run-all:
 	$(BIN)/python scripts/run_notebooks.py --source fivethirtyeight --datasets recent_grads bechdel_movies
 
 dbt-run:
-	$(BIN)/dbt run --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
-	$(BIN)/dbt docs generate --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
+	EIDP_REPO_ROOT=$(PWD) $(BIN)/dbt run --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
+	EIDP_REPO_ROOT=$(PWD) $(BIN)/dbt docs generate --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
 
 dbt-test:
-	$(BIN)/dbt test --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
+	EIDP_REPO_ROOT=$(PWD) $(BIN)/dbt test --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
+
+dbt-preview:
+	EIDP_REPO_ROOT=$(PWD) $(BIN)/python scripts/dbt_preview.py --profiles-path $(DBT_PROFILES_DIR)/profiles.yml --project-dir $(DBT_PROJECT_DIR)
 
 dq:
 	$(BIN)/python scripts/run_dq.py

@@ -8,7 +8,10 @@
   {%- if not root_path -%}
     {%- set project_dir = env_var('DBT_PROJECT_DIR', '') | trim -%}
     {%- if project_dir -%}
-      {%- set root_path = modules.os.path.dirname(modules.os.path.dirname(project_dir)) -%}
+      {%- set project_parts = project_dir.split('/') -%}
+      {%- if project_parts | length > 2 -%}
+        {%- set root_path = project_parts[:-2] | join('/') -%}
+      {%- endif -%}
     {%- endif -%}
   {%- endif -%}
 
@@ -18,6 +21,9 @@
     ) }}
   {%- endif -%}
 
-  {%- set normalized = modules.os.path.normpath(root_path) -%}
-  {{ return(normalized) }}
+  {%- if root_path != '/' and root_path.endswith('/') -%}
+    {%- set root_path = root_path.rstrip('/') -%}
+  {%- endif -%}
+
+  {{ return(root_path) }}
 {%- endmacro %}
