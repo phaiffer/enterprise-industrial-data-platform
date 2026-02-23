@@ -1,6 +1,6 @@
 with source as (
     select *
-    from read_parquet('{{ var("silver_bechdel_movies_path") }}')
+    from read_parquet('{{ repo_root() }}/lakehouse/silver/bechdel_movies/data.parquet')
 )
 
 select

@@ -1,6 +1,6 @@
 with source as (
     select *
-    from read_parquet('{{ var("silver_recent_grads_path") }}')
+    from read_parquet('{{ repo_root() }}/lakehouse/silver/recent_grads/data.parquet')
 )
 
 select
