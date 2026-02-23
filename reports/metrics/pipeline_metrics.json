@@ -5,28 +5,28 @@
     "bechdel_movies"
   ],
   "dq_pass": true,
-  "last_updated_at": "2026-02-22T22:52:17+00:00",
-  "pipeline_started_at": "2026-02-22T22:51:21+00:00",
+  "last_updated_at": "2026-02-23T16:12:02+00:00",
+  "pipeline_started_at": "2026-02-23T16:11:04+00:00",
   "rows_bronze": 1967,
   "rows_gold": 191,
   "rows_ingested": 1967,
   "rows_silver": 1967,
-  "run_date": "2026-02-22",
+  "run_date": "2026-02-23",
   "source": "fivethirtyeight",
   "stages": {
     "bronze": {
-      "batch_id": "20260222_fivethirtyeight",
+      "batch_id": "20260223_fivethirtyeight",
       "datasets_processed": [
         "recent_grads",
         "bechdel_movies"
       ],
       "rows_bronze": 1967,
       "rows_ingested": 1967,
-      "runtime_seconds": 0.08
+      "runtime_seconds": 0.1
     },
     "dbt_gold": {
       "rows_gold": 191,
-      "runtime_seconds": 12.17,
+      "runtime_seconds": 11.68,
       "tables": [
         "dim_major_category",
         "fact_major_employment",
@@ -47,35 +47,35 @@
       "unsuccessful_expectations": 0
     },
     "notebook::00_project_overview.ipynb": {
-      "runtime_seconds": 1.75,
+      "runtime_seconds": 1.32,
       "status": "completed"
     },
     "notebook::01_data_sources.ipynb": {
-      "runtime_seconds": 1.71,
+      "runtime_seconds": 2.17,
       "status": "completed"
     },
     "notebook::02_bronze_ingestion.ipynb": {
-      "runtime_seconds": 2.16,
+      "runtime_seconds": 1.87,
       "status": "completed"
     },
     "notebook::03_silver_cleaning.ipynb": {
-      "runtime_seconds": 1.9,
+      "runtime_seconds": 1.65,
       "status": "completed"
     },
     "notebook::04_dbt_marts_gold.ipynb": {
-      "runtime_seconds": 13.97,
+      "runtime_seconds": 13.41,
       "status": "completed"
     },
     "notebook::05_data_quality.ipynb": {
-      "runtime_seconds": 9.05,
+      "runtime_seconds": 9.02,
       "status": "completed"
     },
     "notebook::06_observability.ipynb": {
-      "runtime_seconds": 2.45,
+      "runtime_seconds": 5.04,
       "status": "completed"
     },
     "notebook::07_portfolio_story.ipynb": {
-      "runtime_seconds": 4.04,
+      "runtime_seconds": 1.54,
       "status": "completed"
     },
     "observability": {
@@ -94,7 +94,7 @@
         "bechdel_movies"
       ],
       "rows_silver": 1967,
-      "runtime_seconds": 0.07
+      "runtime_seconds": 0.08
     },
     "sources": {
       "dataset_count": 2,
