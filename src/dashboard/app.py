@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 import psycopg2
 import streamlit as st
@@ -39,7 +40,9 @@ def main() -> None:
         st.stop()
 
     if df.empty:
-        st.warning("No KPI rows found. Run the Gold aggregation job with ENABLE_POSTGRES_SINK=true.")
+        st.warning(
+            "No KPI rows found. Run the Gold aggregation job with ENABLE_POSTGRES_SINK=true."
+        )
         st.stop()
 
     # Summary

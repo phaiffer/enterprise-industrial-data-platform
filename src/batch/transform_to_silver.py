@@ -23,9 +23,8 @@ if __name__ == "__main__":
     )
 
     # Enforce event_time as timestamp and basic type safety
-    df_silver = (
-        df_raw.withColumn("event_time", to_timestamp(col("event_time")))
-        .filter(col("sensor_id").isNotNull())
+    df_silver = df_raw.withColumn("event_time", to_timestamp(col("event_time"))).filter(
+        col("sensor_id").isNotNull()
     )
 
     silver_path = "s3a://eidp/lake/silver/sensors"

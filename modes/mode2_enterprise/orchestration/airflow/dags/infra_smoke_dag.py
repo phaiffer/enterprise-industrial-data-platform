@@ -28,7 +28,7 @@ def print_infra_smoke_artifact() -> None:
     if not ARTIFACT_PATH.exists():
         raise FileNotFoundError(f"Smoke artifact not found: {ARTIFACT_PATH}")
     print(f"Artifact path: {ARTIFACT_PATH}")
-    print(ARTIFACT_PATH.read_text(encoding='utf-8').strip())
+    print(ARTIFACT_PATH.read_text(encoding="utf-8").strip())
 
 
 with DAG(

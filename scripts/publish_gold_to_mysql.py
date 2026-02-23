@@ -191,7 +191,9 @@ def table_exists(cursor: mysql.connector.cursor.MySQLCursor, database: str, tabl
     return int(cursor.fetchone()[0]) > 0
 
 
-def existing_column_names(cursor: mysql.connector.cursor.MySQLCursor, database: str, table: str) -> list[str]:
+def existing_column_names(
+    cursor: mysql.connector.cursor.MySQLCursor, database: str, table: str
+) -> list[str]:
     cursor.execute(
         """
         select column_name

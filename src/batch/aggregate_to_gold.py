@@ -1,6 +1,9 @@
 import os
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import avg, count, max as smax, min as smin
+from pyspark.sql.functions import avg, count
+from pyspark.sql.functions import max as smax
+from pyspark.sql.functions import min as smin
 
 
 def build_spark(app_name: str) -> SparkSession:
@@ -18,16 +21,13 @@ if __name__ == "__main__":
     df_silver = spark.read.format("delta").load(silver_path)
 
     # Compute KPIs per site and sensor
-    df_gold = (
-        df_silver.groupBy("site", "sensor_id")
-        .agg(
-            count("*").alias("events"),
-            avg("temperature").alias("avg_temperature"),
-            smin("temperature").alias("min_temperature"),
-            smax("temperature").alias("max_temperature"),
-            avg("vibration").alias("avg_vibration"),
-            avg("pressure").alias("avg_pressure"),
-        )
+    df_gold = df_silver.groupBy("site", "sensor_id").agg(
+        count("*").alias("events"),
+        avg("temperature").alias("avg_temperature"),
+        smin("temperature").alias("min_temperature"),
+        smax("temperature").alias("max_temperature"),
+        avg("vibration").alias("avg_vibration"),
+        avg("pressure").alias("avg_pressure"),
     )
 
     gold_path = "s3a://eidp/lake/gold/sensor_kpis"

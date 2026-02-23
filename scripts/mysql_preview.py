@@ -112,7 +112,9 @@ def main() -> int:
     try:
         tables = list_tables(cursor, args.mysql_database)
         if not tables:
-            raise RuntimeError("No tables found in MySQL serving database. Run `make mysql-publish` first.")
+            raise RuntimeError(
+                "No tables found in MySQL serving database. Run `make mysql-publish` first."
+            )
 
         print("Tables:")
         for table_name in tables:

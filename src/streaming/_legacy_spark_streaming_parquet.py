@@ -9,9 +9,8 @@ Recommended action:
 """
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col, to_timestamp
-from pyspark.sql.types import StructType, StringType, DoubleType
-
+from pyspark.sql.functions import col, from_json, to_timestamp
+from pyspark.sql.types import DoubleType, StringType, StructType
 
 schema = (
     StructType()
@@ -35,9 +34,7 @@ df = (
     .load()
 )
 
-df_parsed = df.select(from_json(col("value").cast("string"), schema).alias("data")).select(
-    "data.*"
-)
+df_parsed = df.select(from_json(col("value").cast("string"), schema).alias("data")).select("data.*")
 
 df_final = df_parsed.withColumn("event_ts", to_timestamp(col("event_time")))
 

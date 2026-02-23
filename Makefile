@@ -19,6 +19,8 @@ AIRFLOW_UID ?= 50000
 	dbt-preview \
 	dq \
 	clean \
+	fmt \
+	lint \
 	infra-up \
 	infra-down \
 	infra-logs \
@@ -39,6 +41,8 @@ help:
 	@echo "  make dbt-test"
 	@echo "  make dq"
 	@echo "  make dbt-preview"
+	@echo "  make fmt"
+	@echo "  make lint"
 	@echo ""
 	@echo "Mode 2 (optional enterprise infra):"
 	@echo "  make infra-up"
@@ -79,6 +83,14 @@ dq:
 
 clean:
 	$(BIN)/python scripts/clean_artifacts.py
+
+# Developer formatting and lint checks
+fmt:
+	$(BIN)/ruff format src scripts modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/black src scripts modes/mode2_enterprise/orchestration/airflow/dags
+
+lint:
+	$(BIN)/ruff check src scripts modes/mode2_enterprise/orchestration/airflow/dags
 
 # Mode 2 enterprise infra
 infra-up:

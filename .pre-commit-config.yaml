@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+        exclude: ^(notebooks/|reports/metrics/pipeline_metrics\.json$)
+      - id: trailing-whitespace
+        exclude: ^(notebooks/|reports/metrics/pipeline_metrics\.json$)
+      - id: check-yaml
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.10
+    hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: ^notebooks/
+      - id: ruff-format
+        exclude: ^notebooks/
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black

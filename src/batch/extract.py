@@ -41,5 +41,7 @@ def generate_raw_sensor_csv(output_path: str, rows: int = 5000) -> str:
 
 
 if __name__ == "__main__":
-    out = generate_raw_sensor_csv("data/raw/sensors_batch.csv", rows=int(os.getenv("BATCH_ROWS", "5000")))
+    out = generate_raw_sensor_csv(
+        "data/raw/sensors_batch.csv", rows=int(os.getenv("BATCH_ROWS", "5000"))
+    )
     print(f"Generated batch file at: {out}")

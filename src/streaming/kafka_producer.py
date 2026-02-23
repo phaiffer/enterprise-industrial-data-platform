@@ -29,18 +29,24 @@ def build_event(sensor_id: str, site: str) -> Dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="EIDP Kafka producer (test utility).")
-    parser.add_argument("--bootstrap", default=os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"))
+    parser.add_argument(
+        "--bootstrap", default=os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+    )
     parser.add_argument("--topic", default=os.getenv("KAFKA_TOPIC", "sensor-data"))
     parser.add_argument("--count", type=int, default=10, help="Number of valid events to send.")
-    parser.add_argument("--send-invalid", action="store_true", help="Send one invalid JSON message.")
-    parser.add_argument("--send-duplicate", action="store_true", help="Send a duplicate event to test dedup.")
+    parser.add_argument(
+        "--send-invalid", action="store_true", help="Send one invalid JSON message."
+    )
+    parser.add_argument(
+        "--send-duplicate", action="store_true", help="Send a duplicate event to test dedup."
+    )
     args = parser.parse_args()
 
     producer = KafkaProducer(
         bootstrap_servers=args.bootstrap,
-        value_serializer=lambda v: json.dumps(v).encode("utf-8")
-        if isinstance(v, dict)
-        else str(v).encode("utf-8"),
+        value_serializer=lambda v: (
+            json.dumps(v).encode("utf-8") if isinstance(v, dict) else str(v).encode("utf-8")
+        ),
         key_serializer=lambda v: v.encode("utf-8") if isinstance(v, str) else v,
         acks="all",
         retries=3,
@@ -58,7 +64,7 @@ def main() -> None:
             first_event = event
 
         producer.send(args.topic, key=sensor_id, value=event)
-        print(f"Sent valid event {i+1}/{args.count}: {event}")
+        print(f"Sent valid event {i + 1}/{args.count}: {event}")
 
     if args.send_duplicate and first_event is not None:
         # Send the same event again to validate dedup in streaming

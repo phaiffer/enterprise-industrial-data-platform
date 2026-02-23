@@ -1,15 +1,16 @@
 import os
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col,
-    from_json,
-    sha2,
     concat_ws,
-    to_timestamp,
     current_timestamp,
     expr,
+    from_json,
+    sha2,
+    to_timestamp,
 )
-from pyspark.sql.types import StructType, StructField, StringType, DoubleType
+from pyspark.sql.types import DoubleType, StringType, StructField, StructType
 
 
 def build_spark(app_name: str) -> SparkSession:
@@ -42,9 +43,7 @@ if __name__ == "__main__":
     kafka_topic = os.getenv("KAFKA_TOPIC", "sensor-data")
 
     bronze_path = os.getenv("BRONZE_PATH", "s3a://eidp/lake/bronze/sensors")
-    quarantine_path = os.getenv(
-        "QUARANTINE_PATH", "s3a://eidp/lake/quarantine/sensors_invalid"
-    )
+    quarantine_path = os.getenv("QUARANTINE_PATH", "s3a://eidp/lake/quarantine/sensors_invalid")
 
     checkpoint_bronze = os.getenv(
         "CHECKPOINT_BRONZE", "s3a://eidp/lake/_checkpoints/bronze/sensors"
@@ -122,15 +121,12 @@ if __name__ == "__main__":
     )
 
     # Partition helpers
-    df_valid = (
-        df_valid.withColumn("event_date", expr("to_date(event_time)"))
-        .withColumn("event_hour", expr("date_format(event_time, 'yyyy-MM-dd-HH')"))
+    df_valid = df_valid.withColumn("event_date", expr("to_date(event_time)")).withColumn(
+        "event_hour", expr("date_format(event_time, 'yyyy-MM-dd-HH')")
     )
 
     # Watermark + dedup
-    df_dedup = df_valid.withWatermark("event_time", watermark_delay).dropDuplicates(
-        ["event_id"]
-    )
+    df_dedup = df_valid.withWatermark("event_time", watermark_delay).dropDuplicates(["event_id"])
 
     # Invalid events (failed parsing) -> quarantine
     df_invalid = (

@@ -136,7 +136,9 @@ def print_tables(connection: duckdb.DuckDBPyConnection) -> None:
         print(f"  - {schema_name}.{table_name}")
 
 
-def print_preview(connection: duckdb.DuckDBPyConnection, schema_name: str, table_name: str, limit: int = 10) -> None:
+def print_preview(
+    connection: duckdb.DuckDBPyConnection, schema_name: str, table_name: str, limit: int = 10
+) -> None:
     query = f"select * from {schema_name}.{table_name} limit {limit}"
     result = connection.execute(query)
     rows = result.fetchall()
