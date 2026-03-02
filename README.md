@@ -56,7 +56,7 @@ Smoke demo:
 1. Start services with `make infra-up`.
 2. Open Airflow and trigger DAG `infra_smoke_dag`.
 3. Confirm artifact exists at `reports/infra_smoke/ok.txt`.
-4. Optional CLI verification: `make infra-smoke`.
+4. Optional CLI verification: `make infra-smoke` (writes `reports/infra_smoke_result.json`).
 5. Stop services with `make infra-down`.
 
 ## Recruiter Quick Proof

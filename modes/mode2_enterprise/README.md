@@ -46,7 +46,7 @@ make mysql-down
 2. Confirm containers: `make infra-status`
 3. Open Airflow and trigger DAG `infra_smoke_dag`
 4. Verify host artifact: `reports/infra_smoke/ok.txt`
-5. Optional automated verification: `make infra-smoke`
+5. Optional automated verification: `make infra-smoke` (writes `reports/infra_smoke_result.json`)
 6. Stop services: `make infra-down`
 
 ## Compose Mounts (Important)
