@@ -7,8 +7,8 @@ services:
       - mysqld
       - --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-yourpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-eidp_serving}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
     volumes:
@@ -21,7 +21,7 @@ services:
         - ping
         - -h
         - localhost
-        - -p${MYSQL_PASSWORD:-yourpassword}
+        - -p${MYSQL_PASSWORD}
       interval: 10s
       timeout: 5s
       retries: 10

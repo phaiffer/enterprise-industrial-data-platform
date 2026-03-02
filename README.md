@@ -4,6 +4,8 @@
 
 Portfolio-grade Two-Mode data platform: local notebook-first Lakehouse by default, enterprise infra optional.
 
+> **Warning:** Demo stack — not production hardened.
+
 ## Two Execution Modes
 
 ### Mode 1 (Default): Local Lakehouse
@@ -42,11 +44,11 @@ make infra-down
 ```
 
 Primary URLs:
-- Airflow: `http://localhost:8089` (`admin` / `admin`)
-- Grafana: `http://localhost:3000` (`admin` / `admin`)
+- Airflow: `http://localhost:8089` (`AIRFLOW_ADMIN_USERNAME` / `AIRFLOW_ADMIN_PASSWORD` from `.env`)
+- Grafana: `http://localhost:3000` (`GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` from `.env`)
 - Prometheus: `http://localhost:9090`
 - Kafka UI: `http://localhost:8088`
-- MinIO Console: `http://localhost:9001` (`minioadmin` / `minioadmin`)
+- MinIO Console: `http://localhost:9001` (`MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` from `.env`)
 - Spark Master UI: `http://localhost:18080`
 - Spark Worker UI: `http://localhost:18081`
 

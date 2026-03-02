@@ -12,6 +12,7 @@ Mode 2 showcases orchestration, streaming, storage, and observability breadth. I
 - `make`
 - Recommended: at least 6 GB free RAM for local containers
 - Free local ports: `3000`, `8088`, `8089`, `9090`, `9000`, `9001`, `18080`, `18081`
+- Root `.env` populated (copy from `.env.example`)
 
 ## Core Commands
 ```bash
@@ -32,11 +33,11 @@ make mysql-down
 ```
 
 ## Service URLs
-- Airflow UI: `http://localhost:8089` (`admin` / `admin`)
-- Grafana: `http://localhost:3000` (`admin` / `admin`)
+- Airflow UI: `http://localhost:8089` (`AIRFLOW_ADMIN_USERNAME` / `AIRFLOW_ADMIN_PASSWORD` from `.env`)
+- Grafana: `http://localhost:3000` (`GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` from `.env`)
 - Prometheus: `http://localhost:9090`
 - Kafka UI: `http://localhost:8088`
-- MinIO Console: `http://localhost:9001` (`minioadmin` / `minioadmin`)
+- MinIO Console: `http://localhost:9001` (`MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` from `.env`)
 - Spark Master UI: `http://localhost:18080`
 - Spark Worker UI: `http://localhost:18081`
 
