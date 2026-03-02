@@ -25,6 +25,8 @@ reports/metrics/*
 !reports/infra_smoke/
 reports/infra_smoke/*
 !reports/infra_smoke/.gitkeep
+docs/portfolio/exports/*
+!docs/portfolio/exports/.gitkeep
 # dbt build outputs
 dbt/**/target/
 dbt/**/logs/

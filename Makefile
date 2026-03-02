@@ -6,6 +6,14 @@ DBT_PROFILES_DIR := dbt/lakehouse_dbt
 ENTERPRISE_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.enterprise.yml
 MYSQL_COMPOSE_FILE := modes/mode2_enterprise/docker-compose.mysql.yml
 AIRFLOW_UID ?= 50000
+SOURCE ?= fivethirtyeight
+DATASETS ?= recent_grads bechdel_movies
+RUN_DATE ?=
+
+RUN_NOTEBOOK_ARGS := --source $(SOURCE) --datasets $(DATASETS)
+ifneq ($(strip $(RUN_DATE)),)
+RUN_NOTEBOOK_ARGS += --run-date $(RUN_DATE)
+endif
 
 .DEFAULT_GOAL := help
 
@@ -31,7 +39,12 @@ AIRFLOW_UID ?= 50000
 	mysql-logs \
 	mysql-status \
 	mysql-publish \
-	mysql-preview
+	mysql-preview \
+	portfolio \
+	portfolio-export \
+	portfolio-clean \
+	demo \
+	reset
 
 help:
 	@echo "Mode 1 (default local lakehouse):"
@@ -77,7 +90,7 @@ notebooks:
 # Mode 1 (default): notebook-first local lakehouse
 # -----------------------------------------------------------------------------
 run-all:
-	$(BIN)/python scripts/run_notebooks.py --source fivethirtyeight --datasets recent_grads bechdel_movies
+	$(BIN)/python scripts/run_notebooks.py $(RUN_NOTEBOOK_ARGS)
 
 dbt-run:
 	EIDP_REPO_ROOT=$(PWD) $(BIN)/dbt run --project-dir $(DBT_PROJECT_DIR) --profiles-dir $(DBT_PROFILES_DIR)
@@ -143,3 +156,19 @@ mysql-publish:
 
 mysql-preview:
 	$(BIN)/python scripts/mysql_preview.py
+
+# -----------------------------------------------------------------------------
+# Portfolio exports
+# -----------------------------------------------------------------------------
+portfolio: setup run-all dbt-test dq portfolio-export
+
+portfolio-export:
+	$(BIN)/python scripts/export_portfolio_pack.py $(if $(RUN_ID),--run-id $(RUN_ID),)
+
+portfolio-clean:
+	mkdir -p docs/portfolio/exports
+	find docs/portfolio/exports -mindepth 1 ! -name '.gitkeep' -exec rm -rf {} +
+
+demo: portfolio
+
+reset: clean portfolio-clean
