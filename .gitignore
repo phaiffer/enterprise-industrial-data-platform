@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.py[cod]
+*.pyc
 .ipynb_checkpoints/
 .pytest_cache/
 .env
@@ -19,11 +20,14 @@ lakehouse/warehouse/*
 reports/*
 !reports/.gitkeep
 !reports/metrics/
+reports/metrics/*
 !reports/metrics/.gitkeep
 !reports/infra_smoke/
 reports/infra_smoke/*
 !reports/infra_smoke/.gitkeep
 # dbt build outputs
+dbt/**/target/
+dbt/**/logs/
 dbt/lakehouse_dbt/target/
 dbt/lakehouse_dbt/dbt_packages/
 dbt/lakehouse_dbt/logs/

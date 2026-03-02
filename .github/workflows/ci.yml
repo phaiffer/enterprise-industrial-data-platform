@@ -32,3 +32,6 @@ jobs:
 
       - name: Run data quality checkpoint
         run: make dq
+
+      - name: Run lint checks
+        run: make lint
