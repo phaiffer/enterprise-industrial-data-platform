@@ -75,6 +75,19 @@ Then inspect KPI outputs:
 make dbt-preview
 ```
 
+## Portfolio Pack
+Generate deterministic, website-ready sales artifacts with:
+
+```bash
+make portfolio
+```
+
+Documentation:
+- `docs/portfolio/README.md`
+- `docs/portfolio/CUSTOMER_OVERVIEW.md`
+- `docs/portfolio/TECHNICAL_OVERVIEW.md`
+- `docs/portfolio/WEBSITE_EMBED.md`
+
 ## Visual Demo (Screenshots)
 Place screenshots in `docs/assets/` using these file names:
 - `mode1_dbt_docs_lineage.png`
