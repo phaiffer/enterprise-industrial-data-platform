@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EIDP Showcase | Architecture</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "dark" });
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-accent">EIDP</span>
+        <span>Visualization Layer</span>
+      </div>
+      <nav class="nav">
+        <a class="nav-link {% if active_page == 'overview' %}active{% endif %}" href="/">Overview</a>
+        <a class="nav-link {% if active_page == 'architecture' %}active{% endif %}" href="/architecture">Architecture</a>
+        <a class="nav-link {% if active_page == 'lineage' %}active{% endif %}" href="/lineage">Lineage</a>
+        <a class="nav-link {% if active_page == 'dq' %}active{% endif %}" href="/dq">Data Quality</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <p class="eyebrow">Reference Diagram</p>
+        <h1>Medallion + Transformation + Validation Flow</h1>
+        <p>
+          The orchestration layer coordinates ingestion, dbt transformations, and Great Expectations
+          validation across Raw, Bronze, Silver, and Gold data domains.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="mermaid">
+flowchart LR
+    orchestrator[Orchestration Layer]
+    raw[Raw Data]
+    bronze[Bronze Layer]
+    silver[Silver Layer]
+    dbt[dbt Transformations]
+    ge[Great Expectations Validation]
+    gold[Gold Layer]
+
+    raw --> bronze --> silver --> gold
+    silver --> dbt --> gold
+    silver --> ge
+    ge --> gold
+    orchestrator --> raw
+    orchestrator --> dbt
+    orchestrator --> ge
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

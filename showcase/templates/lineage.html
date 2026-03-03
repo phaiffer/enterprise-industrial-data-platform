@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EIDP Showcase | Lineage</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-accent">EIDP</span>
+        <span>Visualization Layer</span>
+      </div>
+      <nav class="nav">
+        <a class="nav-link {% if active_page == 'overview' %}active{% endif %}" href="/">Overview</a>
+        <a class="nav-link {% if active_page == 'architecture' %}active{% endif %}" href="/architecture">Architecture</a>
+        <a class="nav-link {% if active_page == 'lineage' %}active{% endif %}" href="/lineage">Lineage</a>
+        <a class="nav-link {% if active_page == 'dq' %}active{% endif %}" href="/dq">Data Quality</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <p class="eyebrow">dbt Artifact Summary</p>
+        <h1>Lineage Overview by Medallion Layer</h1>
+        <p>Model metadata is read from dbt manifest artifacts and grouped into platform layers.</p>
+      </section>
+
+      <section class="panel">
+        {% if lineage.manifest_notice %}
+        <p class="artifact-note">{{ lineage.manifest_notice }}</p>
+        {% endif %}
+        {% if lineage.run_results_notice %}
+        <p class="artifact-note">{{ lineage.run_results_notice }}</p>
+        {% endif %}
+
+        <div class="metrics">
+          <div class="metric-card">
+            <span class="metric-label">Total Models</span>
+            <span class="metric-value">{{ lineage.total_models }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Tests Executed</span>
+            <span class="metric-value">{{ lineage.tests_executed }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Failed Tests</span>
+            <span class="metric-value">{{ lineage.failed_tests }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Model Counts Per Layer</h2>
+        {% if lineage.layer_counts %}
+        <div class="metrics">
+          {% for layer, count in lineage.layer_counts.items() %}
+          <div class="metric-card">
+            <span class="metric-label">{{ layer }}</span>
+            <span class="metric-value">{{ count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="artifact-note">Artifact not generated yet: no lineage models detected.</p>
+        {% endif %}
+      </section>
+
+      <section class="panel">
+        <h2>Models Grouped By Layer</h2>
+        {% if lineage.models_by_layer %}
+        <div class="grid two">
+          {% for layer, models in lineage.models_by_layer.items() %}
+          <article class="card">
+            <h3>{{ layer }}</h3>
+            <ul class="model-list">
+              {% for model_name in models %}
+              <li>{{ model_name }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="artifact-note">Artifact not generated yet: manifest model groups unavailable.</p>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

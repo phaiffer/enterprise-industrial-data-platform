@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EIDP Showcase | Data Quality</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-accent">EIDP</span>
+        <span>Visualization Layer</span>
+      </div>
+      <nav class="nav">
+        <a class="nav-link {% if active_page == 'overview' %}active{% endif %}" href="/">Overview</a>
+        <a class="nav-link {% if active_page == 'architecture' %}active{% endif %}" href="/architecture">Architecture</a>
+        <a class="nav-link {% if active_page == 'lineage' %}active{% endif %}" href="/lineage">Lineage</a>
+        <a class="nav-link {% if active_page == 'dq' %}active{% endif %}" href="/dq">Data Quality</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <p class="eyebrow">Data Quality</p>
+        <h1>Validation Signals Across dbt and Great Expectations</h1>
+        <p>
+          This page summarizes quality checks from available execution artifacts and surfaces a
+          quick operational scorecard.
+        </p>
+      </section>
+
+      <section class="panel">
+        {% if dq.artifact_notice %}
+        <p class="artifact-note">{{ dq.artifact_notice }}</p>
+        {% endif %}
+        {% if dq.placeholder_notice %}
+        <p class="artifact-note">{{ dq.placeholder_notice }}</p>
+        {% endif %}
+
+        <div class="metrics">
+          <div class="metric-card">
+            <span class="metric-label">Source</span>
+            <span class="metric-value">{{ dq.source }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Last Execution</span>
+            <span class="metric-value">{{ dq.last_execution }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Quality Summary</h2>
+        <div class="metrics">
+          <div class="metric-card">
+            <span class="metric-label">Total Tests</span>
+            <span class="metric-value">{{ dq.total_tests }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Passed</span>
+            <span class="metric-value">{{ dq.passed_tests }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Failed</span>
+            <span class="metric-value">{{ dq.failed_tests }}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Success Ratio</span>
+            <span class="metric-value">{{ "{:.2f}%".format(dq.success_ratio) }}</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

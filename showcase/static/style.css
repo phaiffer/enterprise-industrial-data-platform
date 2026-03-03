@@ -1,0 +1,234 @@
+:root {
+  --bg-primary: #030916;
+  --bg-secondary: #0a1528;
+  --bg-card: #0f1d34;
+  --text-primary: #ecf7ff;
+  --text-muted: #9eb3c9;
+  --accent: #1ed6e8;
+  --accent-soft: rgba(30, 214, 232, 0.14);
+  --border: rgba(30, 214, 232, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", "Space Grotesk", "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at top right, rgba(30, 214, 232, 0.16), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(9, 69, 111, 0.35), transparent 45%),
+    var(--bg-primary);
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(3, 9, 22, 0.9);
+  backdrop-filter: blur(6px);
+}
+
+.brand {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.brand-accent {
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
+
+.nav {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-primary);
+  border-color: var(--border);
+  background: var(--accent-soft);
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: 2rem auto 3rem;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.hero {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(11, 27, 45, 0.9), rgba(8, 20, 36, 0.75));
+  border: 1px solid var(--border);
+}
+
+.hero h1 {
+  margin: 0.35rem 0 0.7rem;
+  font-size: clamp(1.5rem, 2.1vw, 2.2rem);
+}
+
+.hero p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin: 0;
+}
+
+.panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.panel h2,
+.panel h3 {
+  margin-top: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.card h3 {
+  margin-bottom: 0.45rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.metrics {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.metric-value {
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(30, 214, 232, 0.28), rgba(17, 58, 85, 0.36));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.62rem 0.95rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.12);
+}
+
+.artifact-note {
+  margin: 0.4rem 0 0.8rem;
+  color: #ffd98d;
+  background: rgba(255, 161, 71, 0.11);
+  border: 1px solid rgba(255, 161, 71, 0.36);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+}
+
+.mermaid {
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.model-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+}
+
+.model-list li {
+  margin-bottom: 0.3rem;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .container {
+    width: 94%;
+    margin-top: 1rem;
+  }
+
+  .hero {
+    padding: 1.2rem;
+  }
+}
