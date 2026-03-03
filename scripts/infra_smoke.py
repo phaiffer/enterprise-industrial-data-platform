@@ -17,7 +17,9 @@ def run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, check=False, capture_output=True, text=True)
 
 
-def compose_exec(compose_file: str, service: str, args: list[str]) -> subprocess.CompletedProcess[str]:
+def compose_exec(
+    compose_file: str, service: str, args: list[str]
+) -> subprocess.CompletedProcess[str]:
     return run_command(["docker", "compose", "-f", compose_file, "exec", "-T", service, *args])
 
 
@@ -121,8 +123,7 @@ spark.stop()
     )
     if result.returncode != 0:
         raise RuntimeError(
-            "Spark smoke job failed. "
-            f"Error: {result.stderr.strip() or result.stdout.strip()}"
+            f"Spark smoke job failed. Error: {result.stderr.strip() or result.stdout.strip()}"
         )
 
     combined_output = "\n".join([result.stdout, result.stderr])

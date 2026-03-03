@@ -28,6 +28,7 @@ endif
 	dq \
 	clean \
 	fmt \
+	fmt-check \
 	lint \
 	infra-up \
 	infra-down \
@@ -42,6 +43,8 @@ endif
 	mysql-preview \
 	portfolio \
 	portfolio-export \
+	portfolio-validate \
+	portfolio-open \
 	portfolio-clean \
 	demo \
 	reset
@@ -55,6 +58,7 @@ help:
 	@echo "  make dq"
 	@echo "  make dbt-preview"
 	@echo "  make fmt"
+	@echo "  make fmt-check"
 	@echo "  make lint"
 	@echo ""
 	@echo "Mode 2 (optional enterprise infra):"
@@ -70,6 +74,13 @@ help:
 	@echo "  make mysql-publish"
 	@echo "  make mysql-preview"
 	@echo "  make mysql-down"
+	@echo ""
+	@echo "Portfolio Pack:"
+	@echo "  make portfolio"
+	@echo "  make portfolio-export RUN_ID=<id>"
+	@echo "  make portfolio-validate"
+	@echo "  make portfolio-open"
+	@echo "  make portfolio-clean"
 
 # -----------------------------------------------------------------------------
 # Environment bootstrap
@@ -112,6 +123,10 @@ clean:
 fmt:
 	$(BIN)/ruff format src scripts modes/mode2_enterprise/orchestration/airflow/dags
 	$(BIN)/black src scripts modes/mode2_enterprise/orchestration/airflow/dags
+
+fmt-check:
+	$(BIN)/ruff format --check src scripts modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/black --check src scripts modes/mode2_enterprise/orchestration/airflow/dags
 
 lint:
 	$(BIN)/ruff check src scripts modes/mode2_enterprise/orchestration/airflow/dags
@@ -165,9 +180,25 @@ portfolio: setup run-all dbt-test dq portfolio-export
 portfolio-export:
 	$(BIN)/python scripts/export_portfolio_pack.py $(if $(RUN_ID),--run-id $(RUN_ID),)
 
+portfolio-validate:
+	$(BIN)/python scripts/export_portfolio_pack.py --run-id portfolio-validate --skip-latest-pointer
+	@test -f docs/portfolio/exports/portfolio-validate/manifests/run.json
+
+portfolio-open:
+	@if [ ! -f docs/portfolio/exports/latest.txt ]; then \
+		echo "Missing docs/portfolio/exports/latest.txt. Run 'make portfolio' first."; \
+		exit 1; \
+	fi; \
+	RUN_ID=$$(cat docs/portfolio/exports/latest.txt); \
+	echo "docs/portfolio/exports/$$RUN_ID/charts/throughput_trend_daily.png"; \
+	echo "docs/portfolio/exports/$$RUN_ID/charts/quality_violations_by_category.png"; \
+	echo "docs/portfolio/exports/$$RUN_ID/charts/freshness_latency_sla_compliance.png"; \
+	echo "docs/portfolio/exports/$$RUN_ID/charts/business_kpi_pass_rate_trend.png"; \
+	echo "docs/portfolio/exports/$$RUN_ID/manifests/run.json"
+
 portfolio-clean:
 	mkdir -p docs/portfolio/exports
-	find docs/portfolio/exports -mindepth 1 ! -name '.gitkeep' -exec rm -rf {} +
+	find docs/portfolio/exports -mindepth 1 -maxdepth 1 ! -name '.gitkeep' ! -name 'sample' -exec rm -rf {} +
 
 demo: portfolio
 
