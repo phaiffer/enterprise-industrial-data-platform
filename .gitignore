@@ -27,6 +27,8 @@ reports/infra_smoke/*
 !reports/infra_smoke/.gitkeep
 docs/portfolio/exports/*
 !docs/portfolio/exports/.gitkeep
+!docs/portfolio/exports/sample/
+!docs/portfolio/exports/sample/**
 # dbt build outputs
 dbt/**/target/
 dbt/**/logs/

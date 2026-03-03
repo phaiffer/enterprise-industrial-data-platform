@@ -1,0 +1,79 @@
+{
+  "business_kpi_summary": {
+    "movies_total": 1794,
+    "pass_rate_latest": 0.4646,
+    "pass_rate_overall": 0.4476
+  },
+  "dataset_time_range": {
+    "end": "2013-12-30",
+    "start": "1970-12-29"
+  },
+  "dq_summary": {
+    "rules_checked": 7,
+    "violations_by_category": {
+      "expect_column_values_to_be_in_set": 0,
+      "expect_column_values_to_be_of_type": 0,
+      "expect_column_values_to_not_be_null": 0,
+      "expect_table_row_count_to_be_between": 0
+    },
+    "violations_count": 0
+  },
+  "exported_files": [
+    {
+      "path": "docs/portfolio/exports/sample/charts/business_kpi_pass_rate_trend.png",
+      "size_bytes": 64552
+    },
+    {
+      "path": "docs/portfolio/exports/sample/charts/freshness_latency_sla_compliance.png",
+      "size_bytes": 65958
+    },
+    {
+      "path": "docs/portfolio/exports/sample/charts/quality_violations_by_category.png",
+      "size_bytes": 57518
+    },
+    {
+      "path": "docs/portfolio/exports/sample/charts/throughput_trend_daily.png",
+      "size_bytes": 51114
+    },
+    {
+      "path": "docs/portfolio/exports/sample/manifests/run.json",
+      "size_bytes": 2007
+    }
+  ],
+  "finished_at": "2026-03-03T01:04:32+00:00",
+  "git_sha": "83b6e6cc46a88ee70ea2140ccf529572bbecd6fe",
+  "input_datasets_used": [
+    "bechdel_movies",
+    "recent_grads"
+  ],
+  "input_sources_used": [
+    "fivethirtyeight"
+  ],
+  "latency_summary": {
+    "compliance_ratio": 1.0,
+    "stage_sla_seconds": 20.0,
+    "stages_checked": 11,
+    "stages_within_sla": 11
+  },
+  "row_counts": {
+    "bronze": 1967,
+    "bronze_by_dataset": {
+      "bechdel_movies": 1794,
+      "recent_grads": 173
+    },
+    "gold": 191,
+    "gold_by_dataset": {
+      "dim_major_category": 16,
+      "fact_major_employment": 173,
+      "kpi_major_outcomes": 1,
+      "kpi_movie_representation": 1
+    },
+    "silver": 1967,
+    "silver_by_dataset": {
+      "bechdel_movies": 1794,
+      "recent_grads": 173
+    }
+  },
+  "run_id": "sample",
+  "started_at": "2026-03-03T01:04:31+00:00"
+}
