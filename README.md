@@ -88,6 +88,53 @@ Documentation:
 - `docs/portfolio/TECHNICAL_OVERVIEW.md`
 - `docs/portfolio/WEBSITE_EMBED.md`
 
+## Showcase Visualization Layer
+The repository includes a lightweight, self-contained visualization layer in `showcase/` for portfolio screenshots.
+
+Run locally:
+
+```bash
+python showcase/app.py
+```
+
+Open:
+- `http://localhost:8000/` (Overview)
+- `http://localhost:8000/architecture` (Architecture)
+- `http://localhost:8000/lineage` (dbt lineage summary)
+- `http://localhost:8000/dq` (Data Quality summary)
+
+### Showcase Validation (Future Runs)
+1. Generate artifacts (if needed):
+
+```bash
+make run-all
+make dbt-test
+make dq
+```
+
+2. Start the showcase app:
+
+```bash
+python showcase/app.py
+```
+
+3. Validate routes return `200`:
+
+```bash
+curl -I http://localhost:8000/
+curl -I http://localhost:8000/architecture
+curl -I http://localhost:8000/lineage
+curl -I http://localhost:8000/dq
+```
+
+4. Validate artifact-aware behavior:
+- With artifacts present, pages must render real metrics from:
+  - `dbt/lakehouse_dbt/target/manifest.json`
+  - `dbt/lakehouse_dbt/target/run_results.json`
+  - `reports/`
+  - `great_expectations/`
+- Without artifacts, pages must display: `Artifact not generated yet`
+
 ## Visual Demo (Screenshots)
 Place screenshots in `docs/assets/` using these file names:
 - `mode1_dbt_docs_lineage.png`
