@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: make setup
 
+      - name: Run formatting checks
+        run: make fmt-check
+
+      - name: Run lint checks
+        run: make lint
+
       - name: Run notebooks
         run: make run-all
 
@@ -33,8 +39,5 @@ jobs:
       - name: Run data quality checkpoint
         run: make dq
 
-      - name: Validate portfolio export
-        run: make portfolio-export
-
-      - name: Run lint checks
-        run: make lint
+      - name: Validate portfolio generation (lite)
+        run: make portfolio-validate
