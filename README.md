@@ -2,14 +2,15 @@
 
 ![CI](https://github.com/phaiffer/enterprise-industrial-data-platform/actions/workflows/ci.yml/badge.svg)
 
-Portfolio-grade Two-Mode data platform: local notebook-first Lakehouse by default, enterprise infra optional.
+Technical demonstration of a local, notebook-first lakehouse. The optional enterprise infrastructure is a separate mode.
 
-> **Warning:** Demo stack — not production hardened.
+> **Demonstração técnica:** os dados são públicos e históricos (`recent_grads` e `bechdel_movies`, FiveThirtyEight). Este projeto não representa uma entrega a cliente, resultados industriais ou um sistema em produção. Veja o [resumo para a vitrine](docs/portfolio/DEMO_OVERVIEW.md).
 
 ## Two Execution Modes
 
 ### Mode 1 (Default): Local Lakehouse
 Mode 1 is the primary path for development, interviews, and CI.
+Use Python 3.11. On a fresh clone, create the environment with `make setup PYTHON=python3.11` (or pass the full path to a Python 3.11 executable). The setup registers the `notebook_lakehouse` kernel used by `make run-all`.
 
 ```bash
 make setup
@@ -59,8 +60,8 @@ Smoke demo:
 4. Optional CLI verification: `make infra-smoke` (writes `reports/infra_smoke_result.json`).
 5. Stop services with `make infra-down`.
 
-## Recruiter Quick Proof
-Run these 4 commands and you will see validated KPIs:
+## Local Validation
+Run these commands to regenerate the local pipeline and checks:
 
 ```bash
 make setup
@@ -76,7 +77,7 @@ make dbt-preview
 ```
 
 ## Portfolio Pack
-Generate deterministic, website-ready sales artifacts with:
+Generate charts and a run manifest from the Mode 1 outputs with:
 
 ```bash
 make portfolio
@@ -84,17 +85,28 @@ make portfolio
 
 Documentation:
 - `docs/portfolio/README.md`
-- `docs/portfolio/CUSTOMER_OVERVIEW.md`
+- `docs/portfolio/DEMO_OVERVIEW.md`
 - `docs/portfolio/TECHNICAL_OVERVIEW.md`
 - `docs/portfolio/WEBSITE_EMBED.md`
+- `docs/portfolio/VALIDACAO_LOCAL_2026-10-20.md`
 
 ## Showcase Visualization Layer
-The repository includes a lightweight, self-contained visualization layer in `showcase/` for portfolio screenshots.
+The repository includes a local Flask visualization in `showcase/`. The committed evidence bundle in `showcase/static/evidence/` is a dated snapshot; it remains visible on a fresh clone. Regenerate it only after a successful local pipeline, dbt test and Great Expectations run:
+
+```bash
+make run-all
+make dbt-test
+make dq
+make portfolio-export
+make showcase-evidence
+```
+
+The manifest records the source, datasets, row counts and checks for this run. Figures with derived calendar days or a local 20-second reference are excluded from the institutional showcase because they do not measure operational throughput or a production SLA.
 
 Run locally:
 
 ```bash
-python showcase/app.py
+make showcase
 ```
 
 Open:
@@ -103,22 +115,8 @@ Open:
 - `http://localhost:8000/lineage` (dbt lineage summary)
 - `http://localhost:8000/dq` (Data Quality summary)
 
-### Showcase Validation (Future Runs)
-1. Generate artifacts (if needed):
-
-```bash
-make run-all
-make dbt-test
-make dq
-```
-
-2. Start the showcase app:
-
-```bash
-python showcase/app.py
-```
-
-3. Validate routes return `200`:
+### Showcase Validation
+After starting the app, validate the routes:
 
 ```bash
 curl -I http://localhost:8000/
@@ -127,26 +125,10 @@ curl -I http://localhost:8000/lineage
 curl -I http://localhost:8000/dq
 ```
 
-4. Validate artifact-aware behavior:
-- With artifacts present, pages must render real metrics from:
-  - `dbt/lakehouse_dbt/target/manifest.json`
-  - `dbt/lakehouse_dbt/target/run_results.json`
-  - `reports/`
-  - `great_expectations/`
-- Without artifacts, pages must display: `Artifact not generated yet`
+The pages label this as a local technical demonstration and link to the committed snapshot manifest. If the bundle is absent, they show a preparation message.
 
 ## Visual Demo (Screenshots)
-Place screenshots in `docs/assets/` using these file names:
-- `mode1_dbt_docs_lineage.png`
-- `mode1_ge_data_docs.png`
-- `mode1_kpi_table_preview.png`
-- `mode2_observability_chart.png`
-
-Placeholder assets are tracked so markdown links always resolve:
-- ![dbt lineage placeholder](docs/assets/mode1_dbt_docs_lineage.svg)
-- ![GE Data Docs placeholder](docs/assets/mode1_ge_data_docs.svg)
-- ![KPI preview placeholder](docs/assets/mode1_kpi_table_preview.svg)
-- ![Observability placeholder](docs/assets/mode2_observability_chart.svg)
+Use the [current showcase capture](docs/assets/showcase-overview.png), the [quality checks](showcase/static/evidence/quality_checks.png) and the [historical film chart](showcase/static/evidence/bechdel_pass_rate_by_year.png). The older SVGs in `docs/assets/` are illustrative placeholders, not execution evidence. See [publication guidance](docs/portfolio/WEBSITE_EMBED.md) for captions and exclusions.
 
 ## Architecture
 

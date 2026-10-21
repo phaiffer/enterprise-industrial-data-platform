@@ -1,59 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EIDP Showcase | Architecture</title>
-    <link rel="stylesheet" href="/static/style.css" />
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({ startOnLoad: true, theme: "dark" });
-    </script>
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-accent">EIDP</span>
-        <span>Visualization Layer</span>
-      </div>
-      <nav class="nav">
-        <a class="nav-link {% if active_page == 'overview' %}active{% endif %}" href="/">Overview</a>
-        <a class="nav-link {% if active_page == 'architecture' %}active{% endif %}" href="/architecture">Architecture</a>
-        <a class="nav-link {% if active_page == 'lineage' %}active{% endif %}" href="/lineage">Lineage</a>
-        <a class="nav-link {% if active_page == 'dq' %}active{% endif %}" href="/dq">Data Quality</a>
-      </nav>
-    </header>
+{% extends "base.html" %}
+{% block title %}Arquitetura | Demonstração técnica PhaifferTech{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Arquitetura implementada · Mode 1</p>
+  <h1>Um lakehouse local, executado em oito notebooks.</h1>
+  <p>O fluxo padrão usa arquivos locais, Parquet, DuckDB, dbt e Great Expectations. O Makefile chama o Papermill para executar os notebooks em ordem.</p>
+</section>
 
-    <main class="container">
-      <section class="hero">
-        <p class="eyebrow">Reference Diagram</p>
-        <h1>Medallion + Transformation + Validation Flow</h1>
-        <p>
-          The orchestration layer coordinates ingestion, dbt transformations, and Great Expectations
-          validation across Raw, Bronze, Silver, and Gold data domains.
-        </p>
-      </section>
+<section class="panel" aria-labelledby="camadas-titulo">
+  <div class="section-heading"><div><p class="eyebrow">Fluxo implementado</p><h2 id="camadas-titulo">Camadas e saídas</h2></div></div>
+  <ol class="flow flow-detailed">
+    <li><span class="flow-number">01</span><strong>Raw</strong><span>CSVs públicos em <code>data/raw/</code>; arquivo em cache nas execuções seguintes.</span></li>
+    <li><span class="flow-number">02</span><strong>Bronze</strong><span>Parquet com origem, data de ingestão, lote e hash de linha.</span></li>
+    <li><span class="flow-number">03</span><strong>Silver</strong><span>Tipos, chaves e categorias padronizados para os dois datasets.</span></li>
+    <li><span class="flow-number">04</span><strong>Gold</strong><span>Seis modelos dbt em DuckDB; quatro tabelas Gold exportadas em Parquet.</span></li>
+    <li><span class="flow-number">05</span><strong>Qualidade</strong><span>Testes dbt e checkpoint Great Expectations, com saídas em <code>reports/</code>.</span></li>
+  </ol>
+</section>
 
-      <section class="panel">
-        <div class="mermaid">
-flowchart LR
-    orchestrator[Orchestration Layer]
-    raw[Raw Data]
-    bronze[Bronze Layer]
-    silver[Silver Layer]
-    dbt[dbt Transformations]
-    ge[Great Expectations Validation]
-    gold[Gold Layer]
-
-    raw --> bronze --> silver --> gold
-    silver --> dbt --> gold
-    silver --> ge
-    ge --> gold
-    orchestrator --> raw
-    orchestrator --> dbt
-    orchestrator --> ge
-        </div>
-      </section>
-    </main>
-  </body>
-</html>
+<section class="panel" aria-labelledby="limite-titulo">
+  <div class="section-heading"><div><p class="eyebrow">Escopo da demonstração</p><h2 id="limite-titulo">O que este ambiente comprova</h2></div></div>
+  <div class="grid two">
+    <article class="card"><h3>Execução local</h3><p>O registro publicado foi produzido com Python 3.11, Papermill, DuckDB e dbt em uma máquina local. Veja data, commit base e contagens no <a href="/static/evidence/manifest.json">manifesto</a>.</p></article>
+    <article class="card"><h3>Infraestrutura opcional</h3><p>O repositório também descreve um Mode 2 com serviços Docker. Esse modo não faz parte das evidências desta página.</p></article>
+  </div>
+</section>
+{% endblock %}

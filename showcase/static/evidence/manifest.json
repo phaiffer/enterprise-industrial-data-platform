@@ -1,0 +1,57 @@
+{
+  "dbt_models_by_layer": {
+    "Gold": [
+      "dim_major_category",
+      "fact_major_employment",
+      "kpi_major_outcomes",
+      "kpi_movie_representation"
+    ],
+    "Silver": [
+      "stg_bechdel_movies",
+      "stg_recent_grads"
+    ]
+  },
+  "dbt_tests": {
+    "passed": 14,
+    "total": 14
+  },
+  "generated_at_utc": "2026-10-21T11:34:51+00:00",
+  "git_sha": "68e6ecbd11e71f3ca242aba06e00a043d83fa3a4",
+  "great_expectations": {
+    "rules_checked": 7,
+    "violations": 0
+  },
+  "images_sha256": {
+    "bechdel_pass_rate_by_year.png": "3047f87eed3fc2f64099b5e31e1cfc63f42395f10706aa9b02fe7964a6d92fc0",
+    "quality_checks.png": "12a41ce071209d86878af4712325ea489a82314b829c80171fb5234a5454f03d"
+  },
+  "input_datasets": [
+    "bechdel_movies",
+    "recent_grads"
+  ],
+  "input_sources": [
+    "fivethirtyeight"
+  ],
+  "kind": "technical_demo_snapshot",
+  "note": "Historical public datasets; local demonstration only, not a client or production result.",
+  "row_counts": {
+    "bronze": 1967,
+    "bronze_by_dataset": {
+      "bechdel_movies": 1794,
+      "recent_grads": 173
+    },
+    "gold": 191,
+    "gold_by_dataset": {
+      "dim_major_category": 16,
+      "fact_major_employment": 173,
+      "kpi_major_outcomes": 1,
+      "kpi_movie_representation": 1
+    },
+    "silver": 1967,
+    "silver_by_dataset": {
+      "bechdel_movies": 1794,
+      "recent_grads": 173
+    }
+  },
+  "run_id": "20261021T113451Z"
+}

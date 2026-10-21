@@ -1,19 +1,18 @@
 # Technical Overview
 
+This is a local technical demonstration using historical public FiveThirtyEight datasets. The diagrams below describe the implemented Mode 1 path; no customer environment or production service is represented.
+
 ## Architecture (Context + Containers)
 
 ```mermaid
 flowchart LR
-    source[Source Systems]
-    ops[Operations Team]
-    analyst[Data Analyst]
-    web[Website / Sales Materials]
-    eidp[EIDP Platform]
+    source[FiveThirtyEight CSVs]
+    notebooks[Papermill notebooks]
+    lakehouse[Parquet + DuckDB]
+    checks[dbt tests + Great Expectations]
+    export[Local showcase export]
 
-    source -->|Batch source records| eidp
-    eidp -->|Validated KPIs and manifests| ops
-    eidp -->|Curated datasets| analyst
-    eidp -->|Embed-ready exports| web
+    source --> notebooks --> lakehouse --> checks --> export
 ```
 
 ```mermaid
@@ -37,23 +36,26 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     participant S as Source Data
+    participant M as Make targets
     participant N as Notebook Runner
     participant L as Lakehouse (Bronze/Silver/Gold)
     participant D as dbt
     participant Q as Great Expectations
     participant P as Portfolio Exporter
-    participant W as Website/Sales
+    participant W as Local showcase bundle
 
     S->>N: Extract datasets
     N->>L: Write Bronze
     N->>L: Clean to Silver
-    N->>D: Run dbt models + tests
+    N->>D: Run dbt models
     D->>L: Materialize Gold marts/KPIs
     N->>Q: Run checkpoint
     Q-->>N: DQ results
+    M->>D: Run dbt tests after notebooks
+    M->>Q: Confirm checkpoint after notebooks
     N->>P: Provide metrics and artifacts
     P->>P: Build charts + manifest
-    P->>W: Publish embed-ready files
+    P->>W: Select verified local images + manifest
 ```
 
 ## Layered Model (Medallion)
@@ -83,7 +85,7 @@ sequenceDiagram
 
 - Deterministic transformations:
   - Stable row hashing and sorted outputs during ingestion/cleaning.
-  - Deterministic daily bucketing logic for throughput charting from year-level records.
+  - The optional `throughput_trend_daily.png` uses a hash-derived day from year-level movie records. It does not measure actual daily processing and is excluded from the institutional showcase.
 - Re-runnable exports:
   - `make portfolio-export RUN_ID=<id>` creates isolated run folders.
   - `latest.txt` points to the newest run without mutating prior runs.
@@ -94,6 +96,7 @@ sequenceDiagram
 
 - Runtime metrics:
   - Stage runtimes are tracked in `reports/metrics/pipeline_metrics.json`.
+  - The export compares these local runtimes with a 20-second reference, not an operational SLA.
 - Quality metrics:
   - Evaluated rules, violations count, and category-level breakdown.
 - Export checks:

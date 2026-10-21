@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Demonstração técnica local de engenharia de dados com datasets públicos, dbt, DuckDB e verificações de qualidade." />
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <title>{% block title %}Demonstração técnica | PhaifferTech{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="PhaifferTech, página inicial da demonstração">
+        <span class="brand-accent">PhaifferTech</span>
+        <span>Laboratório de dados</span>
+      </a>
+      <nav class="nav" aria-label="Páginas da demonstração">
+        <a class="nav-link {% if active_page == 'overview' %}active{% endif %}" href="/" {% if active_page == 'overview' %}aria-current="page"{% endif %}>Visão geral</a>
+        <a class="nav-link {% if active_page == 'architecture' %}active{% endif %}" href="/architecture" {% if active_page == 'architecture' %}aria-current="page"{% endif %}>Arquitetura</a>
+        <a class="nav-link {% if active_page == 'lineage' %}active{% endif %}" href="/lineage" {% if active_page == 'lineage' %}aria-current="page"{% endif %}>Linhagem</a>
+        <a class="nav-link {% if active_page == 'dq' %}active{% endif %}" href="/dq" {% if active_page == 'dq' %}aria-current="page"{% endif %}>Qualidade</a>
+      </nav>
+    </header>
+
+    <div class="demo-notice" role="note">
+      <strong>Demonstração técnica.</strong> Dados públicos e históricos; execução local. Os resultados abaixo não representam cliente, operação industrial ou sistema em produção.
+    </div>
+
+    <main id="conteudo" class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <p>Dados: <a href="https://github.com/fivethirtyeight/data">FiveThirtyEight Data</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Gráficos elaborados e traduzidos para esta demonstração. Código: <a href="https://github.com/phaiffer/enterprise-industrial-data-platform">repositório do projeto</a>.</p>
+      {% if evidence %}
+      <p>Registro local: <time datetime="{{ evidence.generated_at_utc }}">{{ evidence.generated_at_utc }}</time> · base Git <code>{{ evidence.git_sha[:12] }}</code> · <a href="/static/evidence/manifest.json">manifesto da demonstração</a>.</p>
+      {% else %}
+      <p>Manifesto da demonstração ainda não gerado. Execute o roteiro documentado no repositório.</p>
+      {% endif %}
+    </footer>
+  </body>
+</html>

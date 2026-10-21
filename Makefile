@@ -9,8 +9,9 @@ AIRFLOW_UID ?= 50000
 SOURCE ?= fivethirtyeight
 DATASETS ?= recent_grads bechdel_movies
 RUN_DATE ?=
+KERNEL ?= notebook_lakehouse
 
-RUN_NOTEBOOK_ARGS := --source $(SOURCE) --datasets $(DATASETS)
+RUN_NOTEBOOK_ARGS := --source $(SOURCE) --datasets $(DATASETS) --kernel-name $(KERNEL)
 ifneq ($(strip $(RUN_DATE)),)
 RUN_NOTEBOOK_ARGS += --run-date $(RUN_DATE)
 endif
@@ -46,6 +47,8 @@ endif
 	portfolio-validate \
 	portfolio-open \
 	portfolio-clean \
+	showcase-evidence \
+	showcase \
 	demo \
 	reset
 
@@ -57,6 +60,8 @@ help:
 	@echo "  make dbt-test"
 	@echo "  make dq"
 	@echo "  make dbt-preview"
+	@echo "  make showcase-evidence"
+	@echo "  make showcase"
 	@echo "  make fmt"
 	@echo "  make fmt-check"
 	@echo "  make lint"
@@ -97,6 +102,12 @@ setup: $(BIN)/python
 notebooks:
 	$(BIN)/jupyter lab notebooks/
 
+showcase:
+	$(BIN)/python showcase/app.py
+
+showcase-evidence:
+	$(BIN)/python scripts/build_showcase_evidence.py
+
 # -----------------------------------------------------------------------------
 # Mode 1 (default): notebook-first local lakehouse
 # -----------------------------------------------------------------------------
@@ -121,15 +132,15 @@ clean:
 
 # Developer formatting and lint checks
 fmt:
-	$(BIN)/ruff format src scripts modes/mode2_enterprise/orchestration/airflow/dags
-	$(BIN)/black src scripts modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/ruff format src scripts showcase modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/black src scripts showcase modes/mode2_enterprise/orchestration/airflow/dags
 
 fmt-check:
-	$(BIN)/ruff format --check src scripts modes/mode2_enterprise/orchestration/airflow/dags
-	$(BIN)/black --check src scripts modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/ruff format --check src scripts showcase modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/black --check src scripts showcase modes/mode2_enterprise/orchestration/airflow/dags
 
 lint:
-	$(BIN)/ruff check src scripts modes/mode2_enterprise/orchestration/airflow/dags
+	$(BIN)/ruff check src scripts showcase modes/mode2_enterprise/orchestration/airflow/dags
 
 # -----------------------------------------------------------------------------
 # Mode 2 (optional): enterprise infra

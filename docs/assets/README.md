@@ -1,8 +1,15 @@
 # Visual Demo Assets
 
-Use this folder for screenshots referenced by the root `README.md`.
+This folder contains local showcase captures and older illustrative placeholders.
 
-Recommended screenshots to capture after running the demo:
+Captures from the verified 2026-10-20 Mode 1 snapshot:
+- `showcase-overview.png`: overview, data path and dated sample metrics.
+- `showcase-quality.png`: separate dbt and Great Expectations results.
+- `showcase-mobile.png`: narrow-screen rendering for layout review.
+
+The source metrics and image hashes are in `../../showcase/static/evidence/manifest.json`. These captures are local demonstration assets, not evidence of a client or production deployment.
+
+Older suggested screenshot names (not current proof):
 - `mode1_dbt_docs_lineage.png`: dbt docs lineage graph from `dbt docs serve`.
 - `mode1_ge_data_docs.png`: Great Expectations Data Docs landing page.
 - `mode1_kpi_table_preview.png`: terminal output from `make dbt-preview`.

@@ -296,39 +296,51 @@ def save_chart(path: Path, figure: plt.Figure) -> None:
 
 def export_throughput_chart(daily: pd.DataFrame, output_path: Path) -> None:
     figure, axis = plt.subplots(figsize=(10, 4.5))
-    axis.plot(daily["event_date"], daily["records_processed"], label="Daily records")
-    axis.plot(daily["event_date"], daily["records_processed_7d_avg"], label="7-day moving average")
-    axis.set_title("Throughput Trend (Daily Records Processed)")
-    axis.set_xlabel("Date")
-    axis.set_ylabel("Records")
+    axis.plot(daily["event_date"], daily["records_processed"], label="Movie records")
+    axis.plot(
+        daily["event_date"], daily["records_processed_7d_avg"], label="7-point moving average"
+    )
+    axis.set_title("Historical movie records by derived date")
+    axis.set_xlabel("Derived date (release year + hashed day)")
+    axis.set_ylabel("Movie records")
     axis.legend(loc="upper left")
     figure.autofmt_xdate()
     save_chart(output_path, figure)
 
 
 def export_quality_chart(grouped_quality: pd.DataFrame, output_path: Path) -> None:
-    labels = grouped_quality["expectation_type"].tolist()
+    friendly_names = {
+        "expect_column_values_to_be_in_set": "Valores permitidos",
+        "expect_column_values_to_be_of_type": "Tipo de dado",
+        "expect_column_values_to_not_be_null": "Sem nulos",
+        "expect_table_row_count_to_be_between": "Contagem de linhas",
+        "all_rules": "Regras verificadas",
+    }
+    labels = [
+        friendly_names.get(name, name.replace("expect_", "").replace("_", " "))
+        for name in grouped_quality["expectation_type"]
+    ]
     positions = list(range(len(labels)))
-    width = 0.4
+    width = 0.36
 
-    figure, axis = plt.subplots(figsize=(11, 5))
-    axis.bar(
+    figure, axis = plt.subplots(figsize=(9, 4.6))
+    axis.barh(
         [position - width / 2 for position in positions],
         grouped_quality["rules_checked"],
-        width=width,
-        label="Rules checked",
+        height=width,
+        label="Regras verificadas",
     )
-    axis.bar(
+    axis.barh(
         [position + width / 2 for position in positions],
         grouped_quality["violations"],
-        width=width,
-        label="Violations",
+        height=width,
+        label="Violações",
     )
-    axis.set_title("Quality Summary (Rule Violations by Category)")
-    axis.set_xlabel("Rule category")
-    axis.set_ylabel("Count")
-    axis.set_xticks(positions, labels, rotation=25, ha="right")
-    axis.legend(loc="upper right")
+    axis.set_title("Great Expectations · execução local")
+    axis.set_xlabel("Quantidade")
+    axis.set_yticks(positions, labels)
+    axis.invert_yaxis()
+    axis.legend(loc="lower right")
     figure.tight_layout()
     save_chart(output_path, figure)
 
@@ -345,9 +357,9 @@ def export_latency_sla_chart(stage_latency: pd.DataFrame, output_path: Path) -> 
     axis.axhline(
         y=PIPELINE_STAGE_SLA_SECONDS,
         linestyle="--",
-        label=f"SLA threshold ({PIPELINE_STAGE_SLA_SECONDS:.0f}s)",
+        label=f"Local reference ({PIPELINE_STAGE_SLA_SECONDS:.0f}s)",
     )
-    axis.set_title("Freshness/Latency View (Pipeline Stage SLA Compliance)")
+    axis.set_title("Local pipeline runtime against a 20-second reference")
     axis.set_xlabel("Pipeline stage")
     axis.set_ylabel("Runtime (seconds)")
     axis.set_xticks(positions, labels, rotation=25, ha="right")
@@ -358,13 +370,13 @@ def export_latency_sla_chart(stage_latency: pd.DataFrame, output_path: Path) -> 
 
 def export_business_kpi_chart(kpi_yearly: pd.DataFrame, output_path: Path) -> None:
     figure, axis = plt.subplots(figsize=(10, 4.5))
-    axis.plot(kpi_yearly["year"], kpi_yearly["pass_rate"] * 100.0, label="Annual pass rate")
+    axis.plot(kpi_yearly["year"], kpi_yearly["pass_rate"] * 100.0, label="Proporção anual")
     axis.plot(
-        kpi_yearly["year"], kpi_yearly["pass_rate_5y_avg"] * 100.0, label="5-year moving average"
+        kpi_yearly["year"], kpi_yearly["pass_rate_5y_avg"] * 100.0, label="Média móvel de 5 anos"
     )
-    axis.set_title("Business KPI: Bechdel Pass Rate Trend")
-    axis.set_xlabel("Release year")
-    axis.set_ylabel("Pass rate (%)")
+    axis.set_title("Filmes que passam no teste Bechdel · dados públicos")
+    axis.set_xlabel("Ano de lançamento")
+    axis.set_ylabel("Proporção (%)")
     axis.legend(loc="upper left")
     save_chart(output_path, figure)
 
@@ -393,7 +405,7 @@ def write_run_report(path: Path, payload: dict[str, Any]) -> None:
         f"- Input sources: {', '.join(payload['input_sources_used']) or 'n/a'}",
         f"- Input datasets: {', '.join(payload['input_datasets_used']) or 'n/a'}",
         (
-            f"- Dataset time range: {payload['dataset_time_range']['start']} -> "
+            f"- Derived chart date range: {payload['dataset_time_range']['start']} -> "
             f"{payload['dataset_time_range']['end']}"
         ),
         (
@@ -405,7 +417,7 @@ def write_run_report(path: Path, payload: dict[str, Any]) -> None:
             f"(violations: {payload['dq_summary']['violations_count']})"
         ),
         (
-            f"- SLA compliance: {payload['latency_summary']['stages_within_sla']} / "
+            f"- Local 20-second reference: {payload['latency_summary']['stages_within_sla']} / "
             f"{payload['latency_summary']['stages_checked']} stages"
         ),
     ]
@@ -464,6 +476,7 @@ def main() -> int:
             "start": str(throughput_daily["event_date"].min().date()),
             "end": str(throughput_daily["event_date"].max().date()),
         },
+        "dataset_time_range_basis": "Derived for charting from movie release year and a hashed day; not a processing date.",
         "row_counts": {
             "bronze": bronze_rows,
             "silver": silver_rows,
@@ -474,6 +487,7 @@ def main() -> int:
         },
         "dq_summary": dq_summary,
         "latency_summary": latency_summary,
+        "latency_scope": "Local stage runtimes compared with a 20-second reference; not a production SLA.",
         "business_kpi_summary": business_kpi_summary,
         "exported_files": [],
     }

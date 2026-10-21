@@ -13,6 +13,7 @@ RUN_RESULTS_PATH = PROJECT_ROOT / "dbt" / "lakehouse_dbt" / "target" / "run_resu
 REPORTS_DIR = PROJECT_ROOT / "reports"
 GE_DIR = PROJECT_ROOT / "great_expectations"
 PIPELINE_METRICS_PATH = REPORTS_DIR / "metrics" / "pipeline_metrics.json"
+EVIDENCE_PATH = PROJECT_ROOT / "showcase" / "static" / "evidence" / "manifest.json"
 DQ_SUMMARY_PATH = REPORTS_DIR / "dq_result_summary.json"
 DQ_FULL_PATH = REPORTS_DIR / "dq_result_full.json"
 
@@ -28,6 +29,11 @@ def load_json(path: Path) -> dict[str, Any] | None:
         return json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return None
+
+
+def get_evidence_context() -> dict[str, Any] | None:
+    """Return the published local-run snapshot, when one has been prepared."""
+    return load_json(EVIDENCE_PATH)
 
 
 def artifact_notice(path: Path) -> str | None:
@@ -126,7 +132,9 @@ def parse_test_results(run_results: dict[str, Any] | None) -> dict[str, Any]:
     }
 
 
-def _extract_row_counts(pipeline_metrics: dict[str, Any] | None) -> tuple[dict[str, Any], str | None]:
+def _extract_row_counts(
+    pipeline_metrics: dict[str, Any] | None,
+) -> tuple[dict[str, Any], str | None]:
     """Return row counts by medallion layer from pipeline metrics when present."""
     if not pipeline_metrics:
         return {}, None
@@ -257,7 +265,9 @@ def _dq_from_ge_full() -> dict[str, Any] | None:
             if unsuccessful is not None:
                 evaluated += unsuccessful
 
-        successful = successful if successful is not None else max(evaluated - (unsuccessful or 0), 0)
+        successful = (
+            successful if successful is not None else max(evaluated - (unsuccessful or 0), 0)
+        )
         unsuccessful = unsuccessful if unsuccessful is not None else max(evaluated - successful, 0)
 
         total += evaluated
@@ -328,7 +338,9 @@ def get_dq_context() -> dict[str, Any]:
     reports_notice = artifact_notice(REPORTS_DIR)
     placeholder = "Artifact not generated yet"
     if ge_notice and reports_notice:
-        placeholder = "Artifact not generated yet: no dbt run results or Great Expectations outputs found."
+        placeholder = (
+            "Artifact not generated yet: no dbt run results or Great Expectations outputs found."
+        )
 
     return {
         "source": "No execution artifact",
